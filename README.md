@@ -117,8 +117,8 @@ You’ll see any Python or import-related errors there.
 👨‍💻 Author
 Abhishek Ranjan
 🎓 Computer Science Engineer | 📍 India
-🌐 LinkedIn
- | GitHub
+🌐 [LinkedIn](https://www.linkedin.com/in/abhishekranjan20/)
+ |[ GitHub](https://github.com/abhi-2029)
 
 📜 License
 MIT License © 2025 Abhishek Ranjan
