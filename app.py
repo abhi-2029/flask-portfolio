@@ -241,7 +241,6 @@
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g, make_response
 from flask_wtf.csrf import CSRFProtect
-from flask_mail import Mail, Message
 from functools import wraps
 import sqlite3
 from pathlib import Path
@@ -255,22 +254,12 @@ load_dotenv()
 
 app = Flask(__name__)
 
+# ----------------------------
 # Secure configuration
+# ----------------------------
 app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key')
 csrf = CSRFProtect(app)
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'Abhi@')
-
-# ----------------------------
-# Flask-Mail Configuration
-# ----------------------------
-app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
-app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True') == 'True'
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
-
-mail = Mail(app)
 
 # ----------------------------
 # Database setup (Fixed)
@@ -281,11 +270,10 @@ INSTANCE_DIR.mkdir(exist_ok=True)  # ensures folder exists
 DATABASE = INSTANCE_DIR / "messages.db"
 
 def get_db():
-    """Connect to the database and enable foreign keys."""
+    """Connect to the database"""
     if not hasattr(g, '_database'):
         g._database = sqlite3.connect(DATABASE)
         g._database.row_factory = sqlite3.Row
-        g._database.execute("PRAGMA foreign_keys = ON")
     return g._database
 
 @app.teardown_appcontext
@@ -294,9 +282,14 @@ def close_db(exception):
     if db is not None:
         db.close()
 
-def init_db():
+def init_db(force_reset=False):
     """Initialize messages table"""
     try:
+        db_path = str(DATABASE)
+        if force_reset and os.path.exists(db_path):
+            os.remove(db_path)
+            print("🗑️ Old database removed and recreated.")
+
         with app.app_context():
             db = get_db()
             db.execute("""
@@ -311,9 +304,9 @@ def init_db():
                 )
             """)
             db.commit()
-        print("✓ Database initialized successfully")
+        print("✅ Database initialized successfully.")
     except Exception as e:
-        print(f"✗ Database initialization failed: {e}")
+        print(f"❌ Database initialization failed: {e}")
 
 # ----------------------------
 # Authentication decorator
@@ -337,63 +330,46 @@ def index():
 @csrf.exempt
 def submit():
     """Handle contact form submission"""
-    if request.method == 'POST':
-        try:
-            name = request.form.get('name', '').strip()
-            email = request.form.get('email', '').strip()
-            subject = request.form.get('subject', '').strip() or "No subject"
-            message = request.form.get('message', '').strip()
+    try:
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        subject = request.form.get('subject', '').strip() or "No subject"
+        message = request.form.get('message', '').strip()
 
-            if not all([name, email, message]):
-                return jsonify({
-                    'success': False,
-                    'error': 'Name, email, and message are required!'
-                }), 400
+        if not all([name, email, message]):
+            return jsonify({
+                'success': False,
+                'error': 'Name, email, and message are required!'
+            }), 400
 
-            db = get_db()
+        db = get_db()
 
-            existing = db.execute('''
-                SELECT 1 FROM messages 
-                WHERE name=? AND email=? AND message=?
-                AND timestamp > datetime('now', '-10 minutes')
-                LIMIT 1
-            ''', (name, email, message)).fetchone()
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                subject TEXT,
+                message TEXT NOT NULL,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(name, email, message, timestamp) ON CONFLICT IGNORE
+            )
+        """)
+        db.commit()
 
-            if not existing:
-                db.execute(
-                    'INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)',
-                    (name, email, subject, message)
-                )
-                db.commit()
+        db.execute(
+            'INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)',
+            (name, email, subject, message)
+        )
+        db.commit()
 
-                # ✅ Send email notification to admin
-                try:
-                    msg = Message(
-                        subject=f"📩 New Contact Form Submission: {subject}",
-                        recipients=[app.config['MAIL_USERNAME']],
-                        body=f"""
-You have received a new message from your portfolio contact form.
+        print(f"✅ New message saved from {name} ({email})")
 
-👤 Name: {name}
-📧 Email: {email}
-📝 Subject: {subject}
-💬 Message:
-{message}
+        return jsonify({'success': True, 'redirect': url_for('thank_you')})
 
-Regards,
-Your Flask Portfolio Bot 🚀
-                        """
-                    )
-                    mail.send(msg)
-                    print("✅ Email sent successfully!")
-                except Exception as e:
-                    print(f"⚠️ Email not sent: {e}")
-
-            return jsonify({'success': True, 'redirect': url_for('thank_you')})
-
-        except Exception as e:
-            print(f"❌ Error: {e}")
-            return jsonify({'success': False, 'error': 'Server error. Please try again later.'}), 500
+    except Exception as e:
+        print(f"❌ Error during submission: {e}")
+        return jsonify({'success': False, 'error': 'Server error. Please try again later.'}), 500
 
 @app.route('/thank-you')
 def thank_you():
@@ -428,13 +404,13 @@ def admin_login():
 @app.route('/admin/messages')
 @admin_required
 def view_messages():
+    """Show all stored messages"""
     db = get_db()
     messages = db.execute('''
         SELECT name, email, subject, message, timestamp 
         FROM messages 
         ORDER BY timestamp DESC
     ''').fetchall()
-
     messages_list = [dict(msg) for msg in messages]
     return render_template('admin_messages.html', messages=messages_list)
 
@@ -449,7 +425,7 @@ def admin_logout():
 @app.route('/debug/messages')
 def debug_messages():
     db = get_db()
-    messages = db.execute('SELECT * FROM messages').fetchall()
+    messages = db.execute('SELECT * FROM messages ORDER BY timestamp DESC').fetchall()
     return jsonify([dict(msg) for msg in messages])
 
 @app.route('/debug/session')
@@ -460,21 +436,26 @@ def debug_session():
 # Database preparation
 # ----------------------------
 def prepare_database():
-    """Ensure database exists and remove duplicate messages"""
+    """Ensure database exists and clean duplicates"""
     if not DATABASE.exists():
         init_db()
-
-    with app.app_context():
-        db = get_db()
-        db.execute("""
-            DELETE FROM messages 
-            WHERE id NOT IN (
-                SELECT MIN(id)
-                FROM messages
-                GROUP BY name, email, message, strftime('%Y-%m-%d %H:%M', timestamp)
-            )
-        """)
-        db.commit()
+    else:
+        try:
+            db = get_db()
+            db.execute("""
+                DELETE FROM messages 
+                WHERE id NOT IN (
+                    SELECT MIN(id)
+                    FROM messages
+                    GROUP BY name, email, message, strftime('%Y-%m-%d %H:%M', timestamp)
+                )
+            """)
+            db.commit()
+            print("🧹 Duplicate messages cleaned up.")
+        except Exception as e:
+            print(f"⚠️ Error cleaning database: {e}")
+            print("Reinitializing database...")
+            init_db(force_reset=True)
 
 # ----------------------------
 # Main entry point
