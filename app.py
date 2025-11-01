@@ -239,6 +239,8 @@
 
 
 
+
+
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g, make_response
 from flask_wtf.csrf import CSRFProtect
 from functools import wraps
@@ -247,6 +249,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+
 # ----------------------------
 # Load environment variables
 # ----------------------------
@@ -254,26 +257,23 @@ load_dotenv()
 
 app = Flask(__name__)
 
-# ----------------------------
 # Secure configuration
-# ----------------------------
 app.secret_key = os.getenv('SECRET_KEY', 'default_secret_key')
 csrf = CSRFProtect(app)
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'Abhi@')
 
-# ----------------------------
-# Database setup (Fixed)
-# ----------------------------
-BASE_DIR = Path(__file__).resolve().parent
-INSTANCE_DIR = BASE_DIR / "instance"
-INSTANCE_DIR.mkdir(exist_ok=True)  # ensures folder exists
-DATABASE = INSTANCE_DIR / "messages.db"
+# Database setup
+BASE_DIR = Path(__file__).parent
+DATABASE = BASE_DIR / 'messages.db'
 
+# ----------------------------
+# Database connection handling
+# ----------------------------
 def get_db():
-    """Connect to the database"""
     if not hasattr(g, '_database'):
         g._database = sqlite3.connect(DATABASE)
         g._database.row_factory = sqlite3.Row
+        g._database.execute("PRAGMA foreign_keys = ON")
     return g._database
 
 @app.teardown_appcontext
@@ -282,14 +282,9 @@ def close_db(exception):
     if db is not None:
         db.close()
 
-def init_db(force_reset=False):
+def init_db():
     """Initialize messages table"""
     try:
-        db_path = str(DATABASE)
-        if force_reset and os.path.exists(db_path):
-            os.remove(db_path)
-            print("🗑️ Old database removed and recreated.")
-
         with app.app_context():
             db = get_db()
             db.execute("""
@@ -304,9 +299,9 @@ def init_db(force_reset=False):
                 )
             """)
             db.commit()
-        print("✅ Database initialized successfully.")
+        print("✓ Database initialized successfully")
     except Exception as e:
-        print(f"❌ Database initialization failed: {e}")
+        print(f"✗ Database initialization failed: {e}")
 
 # ----------------------------
 # Authentication decorator
@@ -322,6 +317,7 @@ def admin_required(f):
 # ----------------------------
 # Routes
 # ----------------------------
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -330,49 +326,50 @@ def index():
 @csrf.exempt
 def submit():
     """Handle contact form submission"""
-    try:
-        name = request.form.get('name', '').strip()
-        email = request.form.get('email', '').strip()
-        subject = request.form.get('subject', '').strip() or "No subject"
-        message = request.form.get('message', '').strip()
+    if request.method == 'POST':
+        try:
+            name = request.form.get('name', '').strip()
+            email = request.form.get('email', '').strip()
+            subject = request.form.get('subject', '').strip()
+            message = request.form.get('message', '').strip()
 
-        if not all([name, email, message]):
+            # Validate fields
+            if not all([name, email, message]):
+                return jsonify({
+                    'success': False,
+                    'error': 'Name, email, and message are required!'
+                }), 400
+
+            db = get_db()
+
+            # Avoid duplicates in last 10 minutes
+            existing = db.execute('''
+                SELECT 1 FROM messages 
+                WHERE name=? AND email=? AND message=?
+                AND timestamp > datetime('now', '-10 minutes')
+                LIMIT 1
+            ''', (name, email, message)).fetchone()
+
+            if not existing:
+                db.execute(
+                    'INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)',
+                    (name, email, subject, message)
+                )
+                db.commit()
+
+            return jsonify({
+                'success': True,
+                'redirect': url_for('thank_you')
+            })
+        except Exception:
             return jsonify({
                 'success': False,
-                'error': 'Name, email, and message are required!'
-            }), 400
-
-        db = get_db()
-
-        db.execute("""
-            CREATE TABLE IF NOT EXISTS messages (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                email TEXT NOT NULL,
-                subject TEXT,
-                message TEXT NOT NULL,
-                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-                UNIQUE(name, email, message, timestamp) ON CONFLICT IGNORE
-            )
-        """)
-        db.commit()
-
-        db.execute(
-            'INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)',
-            (name, email, subject, message)
-        )
-        db.commit()
-
-        print(f"✅ New message saved from {name} ({email})")
-
-        return jsonify({'success': True, 'redirect': url_for('thank_you')})
-
-    except Exception as e:
-        print(f"❌ Error during submission: {e}")
-        return jsonify({'success': False, 'error': 'Server error. Please try again later.'}), 500
+                'error': 'Server error. Please try again later.'
+            }), 500
 
 @app.route('/thank-you')
 def thank_you():
+    """Thank you page with cache disabled"""
     response = make_response(render_template('thank_you.html'))
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response.headers['Pragma'] = 'no-cache'
@@ -382,8 +379,10 @@ def thank_you():
 # ----------------------------
 # Admin routes
 # ----------------------------
+
 @app.route('/admin')
 def admin_home():
+    """Shortcut route for admin"""
     if session.get('is_admin'):
         return redirect(url_for('view_messages'))
     return redirect(url_for('admin_login'))
@@ -391,6 +390,7 @@ def admin_home():
 @app.route('/admin/login', methods=['GET', 'POST'])
 @csrf.exempt
 def admin_login():
+    """Admin login"""
     error = None
     if request.method == 'POST':
         password = request.form.get('password')
@@ -404,18 +404,20 @@ def admin_login():
 @app.route('/admin/messages')
 @admin_required
 def view_messages():
-    """Show all stored messages"""
+    """View all messages"""
     db = get_db()
     messages = db.execute('''
         SELECT name, email, subject, message, timestamp 
         FROM messages 
         ORDER BY timestamp DESC
     ''').fetchall()
+
     messages_list = [dict(msg) for msg in messages]
     return render_template('admin_messages.html', messages=messages_list)
 
 @app.route('/admin/logout')
 def admin_logout():
+    """Logout admin"""
     session.pop('is_admin', None)
     return redirect(url_for('index'))
 
@@ -425,7 +427,7 @@ def admin_logout():
 @app.route('/debug/messages')
 def debug_messages():
     db = get_db()
-    messages = db.execute('SELECT * FROM messages ORDER BY timestamp DESC').fetchall()
+    messages = db.execute('SELECT * FROM messages').fetchall()
     return jsonify([dict(msg) for msg in messages])
 
 @app.route('/debug/session')
@@ -433,36 +435,23 @@ def debug_session():
     return jsonify(dict(session))
 
 # ----------------------------
-# Database preparation
-# ----------------------------
-def prepare_database():
-    """Ensure database exists and clean duplicates"""
-    if not DATABASE.exists():
-        init_db()
-    else:
-        try:
-            db = get_db()
-            db.execute("""
-                DELETE FROM messages 
-                WHERE id NOT IN (
-                    SELECT MIN(id)
-                    FROM messages
-                    GROUP BY name, email, message, strftime('%Y-%m-%d %H:%M', timestamp)
-                )
-            """)
-            db.commit()
-            print("🧹 Duplicate messages cleaned up.")
-        except Exception as e:
-            print(f"⚠️ Error cleaning database: {e}")
-            print("Reinitializing database...")
-            init_db(force_reset=True)
-
-# ----------------------------
 # Main entry point
 # ----------------------------
 if __name__ == '__main__':
-    prepare_database()
+    if not DATABASE.exists():
+        init_db()
+
+    # Remove duplicate entries on startup
+    with app.app_context():
+        db = get_db()
+        db.execute("""
+            DELETE FROM messages 
+            WHERE id NOT IN (
+                SELECT MIN(id)
+                FROM messages
+                GROUP BY name, email, message, strftime('%Y-%m-%d %H:%M', timestamp)
+            )
+        """)
+        db.commit()
+
     app.run(debug=True, port=5000)
-else:
-    prepare_database()
-    app = app
