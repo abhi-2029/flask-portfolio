@@ -241,10 +241,9 @@
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g, make_response
 from flask_wtf.csrf import CSRFProtect
-from flask_mail import Mail, Message
+# from flask_mail import Mail, Message  # temporarily disabled for Vercel stability
 from functools import wraps
 import sqlite3
-from pathlib import Path
 import os
 from dotenv import load_dotenv
 
@@ -261,22 +260,9 @@ csrf = CSRFProtect(app)
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'Abhi@')
 
 # ----------------------------
-# Flask-Mail Configuration
+# Database setup (Vercel-compatible)
 # ----------------------------
-app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
-app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
-app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True') == 'True'
-app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
-app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
-
-mail = Mail(app)
-
-# ----------------------------
-# Database setup
-# ----------------------------
-BASE_DIR = Path(__file__).parent
-DATABASE = BASE_DIR / 'messages.db'
+DATABASE = os.path.join("/tmp", "messages.db")  # ✅ /tmp is writable on Vercel
 
 def get_db():
     if not hasattr(g, '_database'):
@@ -363,28 +349,16 @@ def submit():
                 )
                 db.commit()
 
-                # ✅ Send email notification to admin
-                try:
-                    msg = Message(
-                        subject=f"📩 New Contact Form Submission: {subject}",
-                        recipients=[app.config['MAIL_USERNAME']],
-                        body=f"""
-You have received a new message from your portfolio contact form.
-
-👤 Name: {name}
-📧 Email: {email}
-📝 Subject: {subject}
-💬 Message:
-{message}
-
-Regards,
-Your Flask Portfolio Bot 🚀
-                        """
-                    )
-                    mail.send(msg)
-                    print("✅ Email sent successfully!")
-                except Exception as e:
-                    print(f"⚠️ Email not sent: {e}")
+            # ✅ Email sending temporarily disabled
+            # try:
+            #     msg = Message(
+            #         subject=f"📩 New Contact Form Submission: {subject}",
+            #         recipients=[app.config['MAIL_USERNAME']],
+            #         body=f"New message from {name} ({email}): {message}"
+            #     )
+            #     mail.send(msg)
+            # except Exception as e:
+            #     print(f"⚠️ Email not sent: {e}")
 
             return jsonify({'success': True, 'redirect': url_for('thank_you')})
 
@@ -454,11 +428,11 @@ def debug_session():
     return jsonify(dict(session))
 
 # ----------------------------
-# Main entry point (Local + Vercel)
+# Database Preparation (For Local + Vercel)
 # ----------------------------
 def prepare_database():
     """Ensure database exists and remove duplicate messages"""
-    if not DATABASE.exists():
+    if not os.path.exists(DATABASE):
         init_db()
 
     with app.app_context():
@@ -473,11 +447,13 @@ def prepare_database():
         """)
         db.commit()
 
-# Local run
+# ----------------------------
+# Entry Points (Local + Vercel)
+# ----------------------------
+prepare_database()
+
 if __name__ == '__main__':
-    prepare_database()
     app.run(debug=True, port=5000)
 else:
-    # Vercel entry point
-    prepare_database()
+    # ✅ Vercel entry point
     app = app
