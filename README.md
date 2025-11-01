@@ -114,11 +114,11 @@ If you get 500 Internal Server Error,
 check the Logs tab under Render → Dashboard → Your Web Service.
 You’ll see any Python or import-related errors there.
 
-👨‍💻 Author
-Abhishek Ranjan
-🎓 Computer Science Engineer | 📍 India
-🌐 [LinkedIn](https://www.linkedin.com/in/abhishekranjan20/)
- |[ GitHub](https://github.com/abhi-2029)
+## 👨‍💻 Author  
+**Abhishek Ranjan**  
+🎓 Computer Science Engineer | 📍 India  
+
+🌐 [LinkedIn](https://www.linkedin.com/in/abhishekranjan20/) | [GitHub](https://github.com/abhi-2029)
 
 📜 License
 MIT License © 2025 Abhishek Ranjan
