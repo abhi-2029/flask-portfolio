@@ -1,13 +1,12 @@
 
-
 # from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g, make_response
 # from flask_wtf.csrf import CSRFProtect
+# from flask_mail import Mail, Message
 # from functools import wraps
 # import sqlite3
 # from pathlib import Path
 # import os
 # from dotenv import load_dotenv
-
 
 # # ----------------------------
 # # Load environment variables
@@ -21,13 +20,24 @@
 # csrf = CSRFProtect(app)
 # ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'Abhi@')
 
+# # ----------------------------
+# # Flask-Mail Configuration
+# # ----------------------------
+# app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+# app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
+# app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True') == 'True'
+# app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+# app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+# app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+
+# mail = Mail(app)
+
+# # ----------------------------
 # # Database setup
+# # ----------------------------
 # BASE_DIR = Path(__file__).parent
 # DATABASE = BASE_DIR / 'messages.db'
 
-# # ----------------------------
-# # Database connection handling
-# # ----------------------------
 # def get_db():
 #     if not hasattr(g, '_database'):
 #         g._database = sqlite3.connect(DATABASE)
@@ -76,7 +86,6 @@
 # # ----------------------------
 # # Routes
 # # ----------------------------
-
 # @app.route('/')
 # def index():
 #     return render_template('index.html')
@@ -89,10 +98,9 @@
 #         try:
 #             name = request.form.get('name', '').strip()
 #             email = request.form.get('email', '').strip()
-#             subject = request.form.get('subject', '').strip()
+#             subject = request.form.get('subject', '').strip() or "No subject"
 #             message = request.form.get('message', '').strip()
 
-#             # Validate fields
 #             if not all([name, email, message]):
 #                 return jsonify({
 #                     'success': False,
@@ -101,7 +109,6 @@
 
 #             db = get_db()
 
-#             # Avoid duplicates in last 10 minutes
 #             existing = db.execute('''
 #                 SELECT 1 FROM messages 
 #                 WHERE name=? AND email=? AND message=?
@@ -116,19 +123,37 @@
 #                 )
 #                 db.commit()
 
-#             return jsonify({
-#                 'success': True,
-#                 'redirect': url_for('thank_you')
-#             })
-#         except Exception:
-#             return jsonify({
-#                 'success': False,
-#                 'error': 'Server error. Please try again later.'
-#             }), 500
+#                 # ✅ Send email notification to admin
+#                 try:
+#                     msg = Message(
+#                         subject=f"📩 New Contact Form Submission: {subject}",
+#                         recipients=[app.config['MAIL_USERNAME']],
+#                         body=f"""
+# You have received a new message from your portfolio contact form.
+
+# 👤 Name: {name}
+# 📧 Email: {email}
+# 📝 Subject: {subject}
+# 💬 Message:
+# {message}
+
+# Regards,
+# Your Flask Portfolio Bot 🚀
+#                         """
+#                     )
+#                     mail.send(msg)
+#                     print("✅ Email sent successfully!")
+#                 except Exception as e:
+#                     print(f"⚠️ Email not sent: {e}")
+
+#             return jsonify({'success': True, 'redirect': url_for('thank_you')})
+
+#         except Exception as e:
+#             print(f"❌ Error: {e}")
+#             return jsonify({'success': False, 'error': 'Server error. Please try again later.'}), 500
 
 # @app.route('/thank-you')
 # def thank_you():
-#     """Thank you page with cache disabled"""
 #     response = make_response(render_template('thank_you.html'))
 #     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
 #     response.headers['Pragma'] = 'no-cache'
@@ -138,10 +163,8 @@
 # # ----------------------------
 # # Admin routes
 # # ----------------------------
-
 # @app.route('/admin')
 # def admin_home():
-#     """Shortcut route for admin"""
 #     if session.get('is_admin'):
 #         return redirect(url_for('view_messages'))
 #     return redirect(url_for('admin_login'))
@@ -149,7 +172,6 @@
 # @app.route('/admin/login', methods=['GET', 'POST'])
 # @csrf.exempt
 # def admin_login():
-#     """Admin login"""
 #     error = None
 #     if request.method == 'POST':
 #         password = request.form.get('password')
@@ -163,7 +185,6 @@
 # @app.route('/admin/messages')
 # @admin_required
 # def view_messages():
-#     """View all messages"""
 #     db = get_db()
 #     messages = db.execute('''
 #         SELECT name, email, subject, message, timestamp 
@@ -176,7 +197,6 @@
 
 # @app.route('/admin/logout')
 # def admin_logout():
-#     """Logout admin"""
 #     session.pop('is_admin', None)
 #     return redirect(url_for('index'))
 
@@ -200,7 +220,6 @@
 #     if not DATABASE.exists():
 #         init_db()
 
-#     # Remove duplicate entries on startup
 #     with app.app_context():
 #         db = get_db()
 #         db.execute("""
@@ -214,6 +233,10 @@
 #         db.commit()
 
 #     app.run(debug=True, port=5000)
+
+
+
+
 
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g, make_response
@@ -431,9 +454,10 @@ def debug_session():
     return jsonify(dict(session))
 
 # ----------------------------
-# Main entry point
+# Main entry point (Local + Vercel)
 # ----------------------------
-if __name__ == '__main__':
+def prepare_database():
+    """Ensure database exists and remove duplicate messages"""
     if not DATABASE.exists():
         init_db()
 
@@ -449,4 +473,11 @@ if __name__ == '__main__':
         """)
         db.commit()
 
+# Local run
+if __name__ == '__main__':
+    prepare_database()
     app.run(debug=True, port=5000)
+else:
+    # Vercel entry point
+    prepare_database()
+    app = app
