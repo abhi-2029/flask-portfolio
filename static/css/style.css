@@ -2203,3 +2203,105 @@ textarea:valid {
   border-color: #2d3091 !important;
   box-shadow: none !important;
 }
+
+
+/* ========================= */
+/* 📱 MOBILE RESPONSIVENESS */
+/* ========================= */
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* 🔹 Hamburger base */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 6px;
+    position: relative;
+    z-index: 999;
+}
+
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 5px;
+    transition: 0.3s ease;
+}
+
+/* 🔹 Responsive navbar for mobile */
+@media (max-width: 768px) {
+    header nav ul {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        height: 100vh;
+        width: 70%;
+        background: rgba(0, 0, 0, 0.95);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 25px;
+        transition: right 0.3s ease-in-out;
+        z-index: 998;
+    }
+
+    header nav ul.active {
+        right: 0;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    header .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+    }
+
+    /* 🔹 Adjust hero section */
+    .hero .container {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+
+    .hero .hero-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero .hero-content h2 {
+        font-size: 1.2rem;
+    }
+
+    .hero .hero-image img {
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+    }
+
+    section {
+        scroll-margin-top: 80px;
+    }
+
+    footer .container {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* 🔹 Hamburger animation */
+.hamburger.open span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}

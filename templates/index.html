@@ -8,6 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+
 </head>
 <body class="home-page">
     <!-- Loading Screen -->
@@ -356,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
           setTimeout(() => adminLink.style.display = 'none', 1500);
       }
   });
-
+  12
   // Blink animation (optional)
   const style = document.createElement('style');
   style.textContent = `
@@ -367,6 +369,22 @@ document.addEventListener('DOMContentLoaded', function() {
   document.head.appendChild(style);
 
 
+
+  // for mobile ui
+const hamburger = document.querySelector('.hamburger');
+const navMenu = document.querySelector('header nav ul');
+
+hamburger.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+    hamburger.classList.toggle('open');
+});
+
+document.querySelectorAll('header nav ul li a').forEach(link => {
+    link.addEventListener('click', () => {
+        navMenu.classList.remove('active');
+        hamburger.classList.remove('open');
+    });
+});
     
     </script>
 </body>

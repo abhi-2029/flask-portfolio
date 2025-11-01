@@ -241,9 +241,10 @@
 
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g, make_response
 from flask_wtf.csrf import CSRFProtect
-# from flask_mail import Mail, Message  # temporarily disabled for Vercel stability
+from flask_mail import Mail, Message
 from functools import wraps
 import sqlite3
+from pathlib import Path
 import os
 from dotenv import load_dotenv
 
@@ -260,11 +261,27 @@ csrf = CSRFProtect(app)
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'Abhi@')
 
 # ----------------------------
-# Database setup (Vercel-compatible)
+# Flask-Mail Configuration
 # ----------------------------
-DATABASE = os.path.join("/tmp", "messages.db")  # ✅ /tmp is writable on Vercel
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True') == 'True'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+
+mail = Mail(app)
+
+# ----------------------------
+# Database setup (Fixed)
+# ----------------------------
+BASE_DIR = Path(__file__).resolve().parent
+INSTANCE_DIR = BASE_DIR / "instance"
+INSTANCE_DIR.mkdir(exist_ok=True)  # ensures folder exists
+DATABASE = INSTANCE_DIR / "messages.db"
 
 def get_db():
+    """Connect to the database and enable foreign keys."""
     if not hasattr(g, '_database'):
         g._database = sqlite3.connect(DATABASE)
         g._database.row_factory = sqlite3.Row
@@ -349,16 +366,28 @@ def submit():
                 )
                 db.commit()
 
-            # ✅ Email sending temporarily disabled
-            # try:
-            #     msg = Message(
-            #         subject=f"📩 New Contact Form Submission: {subject}",
-            #         recipients=[app.config['MAIL_USERNAME']],
-            #         body=f"New message from {name} ({email}): {message}"
-            #     )
-            #     mail.send(msg)
-            # except Exception as e:
-            #     print(f"⚠️ Email not sent: {e}")
+                # ✅ Send email notification to admin
+                try:
+                    msg = Message(
+                        subject=f"📩 New Contact Form Submission: {subject}",
+                        recipients=[app.config['MAIL_USERNAME']],
+                        body=f"""
+You have received a new message from your portfolio contact form.
+
+👤 Name: {name}
+📧 Email: {email}
+📝 Subject: {subject}
+💬 Message:
+{message}
+
+Regards,
+Your Flask Portfolio Bot 🚀
+                        """
+                    )
+                    mail.send(msg)
+                    print("✅ Email sent successfully!")
+                except Exception as e:
+                    print(f"⚠️ Email not sent: {e}")
 
             return jsonify({'success': True, 'redirect': url_for('thank_you')})
 
@@ -428,11 +457,11 @@ def debug_session():
     return jsonify(dict(session))
 
 # ----------------------------
-# Database Preparation (For Local + Vercel)
+# Database preparation
 # ----------------------------
 def prepare_database():
     """Ensure database exists and remove duplicate messages"""
-    if not os.path.exists(DATABASE):
+    if not DATABASE.exists():
         init_db()
 
     with app.app_context():
@@ -448,12 +477,11 @@ def prepare_database():
         db.commit()
 
 # ----------------------------
-# Entry Points (Local + Vercel)
+# Main entry point
 # ----------------------------
-prepare_database()
-
 if __name__ == '__main__':
+    prepare_database()
     app.run(debug=True, port=5000)
 else:
-    # ✅ Vercel entry point
+    prepare_database()
     app = app
