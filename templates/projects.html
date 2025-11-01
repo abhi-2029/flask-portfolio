@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects</title>
+    <style>
+        /* Basic styling for the project section */
+        .section {
+            padding: 60px 0;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #333;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+        
+        .project-card {
+            perspective: 1000px;
+            height: 500px;
+        }
+        
+        .project-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        
+        .project-card:hover .project-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .project-card-front, .project-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            padding: 30px;
+            border-radius: 10px;
+        }
+        
+        .project-card-front {
+            background-color: #fff;
+            color: #333;
+            border: 1px solid #eaeaea;
+        }
+        
+        .project-card-back {
+            background-color: #4a6cf7;
+            color: white;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .project-card h3 {
+            margin-top: 0;
+            color: #4a6cf7;
+            font-size: 1.5rem;
+        }
+        
+        .project-date {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        .project-card ul {
+            padding-left: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .project-card li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .tech-stack span {
+            background-color: #f1f5f9;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #4a6cf7;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .project-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: white;
+            color: #4a6cf7;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+        }
+        
+        .btn-demo {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-demo:hover {
+            background-color: white;
+            color: #4a6cf7;
+        }
+    </style>
+</head>
+<body>
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <h3>Real Estate Platform</h3>
+                            <p class="project-date">Jul 2025 - Aug 2025</p>
+                            <ul>
+                                <li>Deployed a real estate platform with MongoDB, Express, React, Node.js, and Tailwind CSS, reducing property search time by 30% and improving user satisfaction</li>
+                                <li>Implemented property listings with full CRUD operations, supporting 15+ active property entries for streamlined content management </li>
+                                <li>Integrated Redux Toolkit for predictable state management and React Router DOM for efficient multi-page navigations</li>
+                                <li>Enhanced interface performance with TailwindCSS, increasing Lighthouse score by 25% across mobile and desktop devices</li>
+                            </ul>
+                            <div class="tech-stack">
+                                <span>MERN stack</span>
+                                <span> TailwindCSS</span>
+                                <span>Redux Toolkit</span>
+                                <span>JWT</span>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3>Explore Website</h3>
+                            <p>Developed an interactive real estate project featuring property listings, analytics, and user engagement functionalitie.</p>
+                            <div class="project-links">
+                                <a href="https://github.com/abhi-2029/mern-estate" class="btn" target="_blank">View Details</a>
+                                <a href="https://mern-estate-l7c1.onrender.com/" class="btn btn-demo" target="_blank">Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <h3>Learning Management System (LMS)</h3>
+                            <p class="project-date">Apr 2025 - May 2025</p>
+                            <ul>
+                                <li>Built an LMS with secure authentication and role-based dashboards for students and instructors, accessible across all screen sizes</li>
+                                <li>Enabled key learning features including course creation, enrollment, progress tracking, and interactive lessons, supporting 20+ concurrent learners</li>
+                                <li>Improved backend scalability by configuring MongoDB and Express APIs, reducing API response latency by 25%</li>
+                                <li>Delivered a clean, React-based interface with TailwindCSS, improving learner engagement and accessibility across devices </li>
+                            </ul>
+                            <div class="tech-stack">
+                                <span>MERN stack</span>
+                                <span> TailwindCSS</span>
+                                <span> (Clerk, Stripe) </span>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3>Explore Website</h3>
+                            <p>Designed and implemented a Learning Management System (LMS) integrating course management, user authentication, and real-time progress tracking.</p>
+                            <div class="project-links">
+                                <a href="https://github.com/abhi-2029/lms-full-stack" class="btn" target="_blank">View Details</a>
+                                <a href="https://lms-full-stack-sandy-nine.vercel.app/" class="btn btn-demo" target="_blank">Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <h3>React E-Commerce Website</h3>
+                            <p class="project-date">Jan 2025 – Feb 2025</p>
+                            <ul>
+                                <li>Developed a responsive e-commerce platform, improving mobile accessibility and enabling real-time cart updates for 100+ products</li>
+                                <li>Resolved React 18 and Material UI 4 compatibility issues, ensuring 100% stable deployment across browsers</li>
+                                <li>Implemented reusable components, reducing code redundancy by 30% and enhancing modularity for faster feature updates</li>
+                                <li>Integrated form validation and state management, cutting checkout errors by 40% and improving overall user experience</li>
+                            </ul>
+                            <div class="tech-stack">
+                                <span>HTML5</span>
+                                <span>CSS3</span>
+                                <span>JavaScript</span>
+                                <span>React</span>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3>Explore Website</h3>
+                            <p>AI-driven e-commerce platform with personalized recommendations.</p>
+                            <div class="project-links">
+                                <a href="https://github.com/abhi-2029/react-shopping-app" class="btn" target="_blank">View on GitHub</a>
+                                <a href="https://react-shopping-app-mu.vercel.app/" class="btn btn-demo" target="_blank">Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <h3>Power BI Dashboard – Food Impact on Indians</h3>
+                            <p class="project-date">Mar 2025 - Apr 2025</p>
+                            <ul>
+                                <li>Designed an interactive dashboard in Power BI to analyze regional food habits influence on health</li>
+                                <li>Integrated demographic and nutritional datasets, uncovering significant correlations</li>
+                                <li>Used custom visuals, thematic elements, and responsive layout techniques</li>
+                                <li>Provided actionable insights about regional food behaviors</li>
+                            </ul>
+                            <div class="tech-stack">
+                                <span>Power BI</span>
+                                <span>DAX</span>
+                                <span>Power Query</span>
+                                <span>Custom Visuals</span>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3>Explore Dashboard</h3>
+                            <p>Interactive Power BI dashboard for health and nutrition insights.</p>
+                            <div class="project-links">
+                                <a href="https://github.com/abhi-2029/food-impact-dashboard" class="btn" target="_blank">View Details</a>
+                                <a href="https://app.powerbi.com/view?r=eyJrIjoiODMxYjVmNzAtNjliNS00OWE3LThlOTMtYTk3YmI2ODQ2MWMyIiwidCI6ImUxNGU3M2ViLTUyNTEtNDM4OC04ZDY3LThmOWYyZTJkNWE0NiIsImMiOjEwfQ%3D%3D" class="btn btn-demo" target="_blank">View Dashboard</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <h3>Path Finder Visualizer</h3>
+                            <p class="project-date">Oct 2025 - Oct 2025</p>
+                            <ul>
+                                <li>Created an interactive web-based tool to visualize pathfinding algorithms in real-time</li>
+                                <li>Implemented Dijkstra’s, A*, BFS, and DFS algorithms to demonstrate shortest path computation</li>
+                                <li>Enhanced user interaction with customizable grids, obstacles, and smooth animations</li>
+                            </ul>
+                            <div class="tech-stack">
+                                <span>HTML5</span>
+                                <span>CSS3</span>
+                                <span>JavaScript</span>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3>Explore Website</h3>
+                            <p>Designed and implemented an interactive Path Finder Visualization to simulate and compare pathfinding algorithms for shortest route computation.</p>
+                            <div class="project-links">
+                                <a href="https://github.com/abhi-2029/Path-Finder-Visualization" class="btn" target="_blank">View Details</a>
+                                <a href="https://path-finder-omega-virid.vercel.app/" class="btn btn-demo" target="_blank">Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <h3>AI-powered 3D Neon Tic Tac Toe with unbeatable logic and glowing visuals</h3>
+                            <p class="project-date">Oct 2025 - Oct 2025</p>
+                            <ul>
+                                <li>Engineered a 3D interactive Tic Tac Toe game with a futuristic neon-glass UI, built using HTML, CSS, and JavaScript</li>
+                                <li>Programmed an AI opponent leveraging the Minimax algorithm to ensure perfect, unbeatable gameplay logic</li>
+                                <li>Enhanced user engagement through real-time celebrations, including confetti animations and glowing tie/win effects</li>
+                                <li>Optimized the interface with a responsive layout and light/dark theme toggle, ensuring seamless multi-device support</li>
+                            </ul>
+                            <div class="tech-stack">
+                                <span>HTML5</span>
+                                <span>CSS3</span>
+                                <span>JavaScript</span>
+                                <!-- <span>Minimax Algorithm(AI)</span> -->
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3>Explore Website</h3>
+                            <p>Interactive 3D Tic Tac Toe with smart AI and stunning neon-glass effects</p>
+                            <div class="project-links">
+                                <a href="https://github.com/abhi-2029/Tic_Tac_Toe" class="btn" target="_blank">View Details</a>
+                                <a href="https://tic-tac-toe-delta-one-46.vercel.app/" class="btn btn-demo" target="_blank">Live Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+        </div>
+    </section>
+</body>
+</html>

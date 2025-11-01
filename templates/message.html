@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .message {
+            background: #f9f9f9;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .message h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .timestamp {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Messages</h1>
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="message">
+                <h3>{{ msg.name }} &lt;{{ msg.email }}&gt;</h3>
+                {% if msg.subject %}<p><strong>Subject:</strong> {{ msg.subject }}</p>{% endif %}
+                <p>{{ msg.message }}</p>
+                <p class="timestamp">Received: {{ msg.timestamp }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No messages yet.</p>
+    {% endif %}
+</body>
+</html>

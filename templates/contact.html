@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact</title>
+
+  <style>
+    /* Enable text selection for email, phone, and address */
+    .contact-card p, 
+    .contact-card a {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      cursor: text;
+      color: #222;
+      font-size: 1rem;
+      word-break: break-word;
+    }
+
+    .contact-card a {
+      text-decoration: none;
+      color: #2d3091;
+    }
+
+    .contact-card a:hover {
+      text-decoration: underline;
+    }
+
+    .copy-btn {
+      background: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #eef3ff;
+      transform: scale(1.05);
+    }
+
+    .copy-btn i {
+      color: #2d3091;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<section id="contact" class="section">
+  <div class="container">
+    <h2 class="section-title">Get In Touch</h2>
+    <div class="contact-grid">
+      
+      <!-- Contact Info -->
+      <div class="contact-info">
+        <div class="contact-card">
+          <i class="fas fa-envelope"></i>
+          <p>
+            <a href="mailto:abhisheksingh70224@gmail.com">abhisheksingh70224@gmail.com</a>
+          </p>
+          <button class="btn copy-btn" data-text="abhisheksingh70224@gmail.com" title="Copy Email">
+            <i class="fas fa-copy"></i>
+          </button>
+        </div>
+
+        <div class="contact-card">
+          <i class="fas fa-phone"></i>
+          <p>
+            <a href="tel:+917667101673">+91-7667101673</a>
+          </p>
+          <button class="btn copy-btn" data-text="+917667101673" title="Copy Number">
+            <i class="fas fa-copy"></i>
+          </button>
+        </div>
+
+        <div class="contact-card">
+          <i class="fas fa-map-marker-alt"></i>
+          <p>Phagwara, Punjab, India</p>
+        </div>
+
+        <div class="contact-social">
+          <h3>Connect with me</h3>
+          <div class="social-links">
+            <a href="https://linkedin.com/in/abhishekranjan20" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="https://github.com/abhi-2029" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+            <a href="mailto:abhisheksingh70224@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+            <a href="https://leetcode.com/u/abhishek__ranjan/" target="_blank" title="LeetCode"><i class="fas fa-code"></i></a>
+            <a href="https://twitter.com/abhishekranjan" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <form action="{{ url_for('submit') }}" method="POST" id="contactForm" novalidate>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <div class="form-group">
+          <input type="text" name="name" placeholder="Your Name" required minlength="2" maxlength="50">
+        </div>
+        <div class="form-group">
+          <input type="email" name="email" placeholder="Your Email" required 
+                 pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+        </div>
+        <div class="form-group">
+          <input type="text" name="subject" placeholder="Subject (Optional)" maxlength="100">
+        </div>
+        <div class="form-group">
+          <textarea name="message" placeholder="Your Message" required minlength="10" maxlength="500"></textarea>
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">
+          <span class="submit-text">Send Message</span>
+          <span class="sending-text" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i> Sending...
+          </span>
+        </button>
+
+        <!-- Flash Messages -->
+        <div id="formMessages" class="flash-messages">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+          {% endwith %}
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ✅ Copy-to-clipboard functionality
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.getAttribute('data-text');
+      navigator.clipboard.writeText(text);
+      btn.innerHTML = '<i class="fas fa-check"></i>';
+      setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i>', 1500);
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+# Core Flask
+Flask==2.3.2
+Werkzeug==2.3.7
+Jinja2==3.1.2
+
+# Forms and Security
+Flask-WTF==1.1.1
+itsdangerous==2.1.2
+
+# Database
+sqlite3==3.42.0  # Built-in but specified for documentation
+
+# Frontend Assets (if needed)
+Flask-Assets==2.0
+
+# Rate Limiting
+Flask-Limiter==2.8.1
+
+# Environment Management
+python-dotenv==1.0.0
+
+# Deployment (optional)
+gunicorn==20.1.0
+
+
+
+
+
+
+
+
+Flask==2.3.2
+Flask-WTF==1.1.1
+Werkzeug==2.3.7
+Jinja2==3.1.2
+itsdangerous==2.1.2
+click==8.1.3
+python-dotenv==1.0.0
+Flask-Limiter==2.8.1
+
+
+
+Key Packages Explained:
+Core Flask Dependencies:
+
+Flask - The main web framework
+
+Werkzeug - WSGI utilities (comes with Flask)
+
+Jinja2 - Templating engine (comes with Flask)
+
+itsdangerous - Security utilities (comes with Flask)
+
+click - Command line interface (comes with Flask)
+
+Additional Required Packages:
+
+Flask-WTF - For CSRF protection and form handling
+
+python-dotenv - For environment variable management
+
+Flask-Limiter - For rate limiting (optional but recommended)
+
+
+How to Generate/Update Your requirements.txt:
+source venv/bin/activate  # Linux/Mac
+.\venv\Scripts\activate  # Windows
+
+
+Generate the file automatically:
+pip freeze > requirements.txt
+
+For production, you may want to pin exact versions:
+pip install -r requirements.txt
+
+
+Additional Recommendations:
+For development, you might want separate files:
+
+requirements-dev.txt (development-only packages)
+
+requirements.txt (production requirements)
+
+If you're using SQLite (as in your code), you don't need additional database drivers, but if you switch to other databases later, you'll need to add:
+psycopg2-binary==2.9.6  # For PostgreSQL
+mysql-connector-python==8.0.33  # For MySQL
+
+
+For deployment, make sure to specify exact versions (using ==) as shown above to prevent compatibility issues.

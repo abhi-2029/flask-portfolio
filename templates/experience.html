@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience Section</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #2d3091;
+            position: relative;
+        }
+        
+        body.dark-mode .section-title {
+            color: #8b9afb;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .experience-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border-left: 5px solid #6a11cb;
+        }
+        
+        body.dark-mode .experience-card {
+            background: #1e1e1e;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-left: 5px solid #8b9afb;
+        }
+        
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .company-name {
+            font-size: 1.8rem;
+            color: #2d3091;
+            font-weight: 700;
+        }
+        
+        body.dark-mode .company-name {
+            color: #8b9afb;
+        }
+        
+        .duration {
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .experience-content {
+            margin-left: 20px;
+        }
+        
+        .experience-list {
+            list-style-type: none;
+            margin-bottom: 25px;
+        }
+        
+        .experience-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        body.dark-mode .experience-list li {
+            color: #d0d0d0;
+        }
+        
+        .experience-list li:before {
+            content: "•";
+            color: #6a11cb;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -3px;
+        }
+        
+        body.dark-mode .experience-list li:before {
+            color: #8b9afb;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #6a11cb 50%, transparent 100%);
+            margin: 25px 0;
+            opacity: 0.5;
+        }
+        
+        body.dark-mode .divider {
+            background: linear-gradient(90deg, transparent 0%, #8b9afb 50%, transparent 100%);
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        .tech-pill {
+            background: rgba(106, 17, 203, 0.1);
+            color: #6a11cb;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        body.dark-mode .tech-pill {
+            background: rgba(139, 154, 251, 0.15);
+            color: #8b9afb;
+        }
+        
+        @media (max-width: 768px) {
+            .experience-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .company-name {
+                font-size: 1.5rem;
+            }
+            
+            .experience-list li {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            
+            <div class="experience-card">
+                <div class="experience-header">
+                    <h3 class="company-name">Board Infinity - Summer Training</h3>
+                    <span class="duration">Summer 2023</span>
+                </div>
+                
+                <div class="experience-content">
+                    <ul class="experience-list">
+                        <li>Completed 60+ hours of advanced DSA training on C++, mastering 100+ problems with OOP design patterns</li>
+
+                                <li>Developed a modular Library Management System managing 200+ books and transactions</li>
+
+                                <li>Improved data retrieval by 40% using hash map based storage for users and books</li>
+
+                                <li>Built persistent file storage with robust I/O for seamless record management</li>
+
+                                <li>Implemented file handling for persistent storage and seamless data retrieval</li>
+                    </ul>
+                    
+                    <div class="tech-stack">
+                        <span class="tech-pill">C++</span>
+                        <span class="tech-pill">Data Structures</span>
+                        <span class="tech-pill">Algorithms</span>
+                        <span class="tech-pill">OOP</span>
+                        <span class="tech-pill">Recursion</span>
+                        <span class="tech-pill">Graph</span>
+                        <span class="tech-pill">Hash Maps</span>
+                        <span class="tech-pill">DP</span>
+                    </div>
+                    <button class="btn view-certificate" data-certificate="board-infinity" onclick="window.open('https://drive.google.com/file/d/1vQjyZdEH9lj8gh8HrCu7tatMA-LluDJL/view?usp=drive_link', '_blank')">View Certificate</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

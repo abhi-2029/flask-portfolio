@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Messages</title>
+
+  <style>
+    :root {
+      --bg-color: #f4f6fb;
+      --text-color: #333;
+      --table-bg: #fff;
+      --th-bg: #f1f3ff;
+      --th-color: #2d3091;
+      --accent-color: #2d3091;
+      --timestamp-color: #6c63ff;
+      --hover-bg: #f9f9ff;
+      --logout-bg: #ff4b5c;
+      --logout-hover: #e63946;
+    }
+
+    body.dark-mode {
+      --bg-color: #1e1e2f;
+      --text-color: #f5f5f5;
+      --table-bg: #2b2b40;
+      --th-bg: #353552;
+      --th-color: #e0e0ff;
+      --accent-color: #6c63ff;
+      --timestamp-color: #b7b3ff;
+      --hover-bg: rgba(255, 255, 255, 0.05);
+      --logout-bg: #ff4b5c;
+      --logout-hover: #ff707c;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    body {
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      justify-content: center;
+      padding: 50px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      background: var(--table-bg);
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(90deg, var(--accent-color), #6a6df5);
+      color: #fff;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header h1::before {
+      content: "📨";
+    }
+
+    .logout-btn {
+      background: var(--logout-bg);
+      border: none;
+      padding: 10px 20px;
+      color: #fff;
+      font-weight: 500;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 4px 10px rgba(255, 75, 92, 0.3);
+    }
+
+    .logout-btn:hover {
+      background: var(--logout-hover);
+      transform: translateY(-2px);
+    }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: var(--bg-color);
+    }
+
+    .toolbar input {
+      padding: 10px 15px;
+      width: 300px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      outline: none;
+      font-size: 0.95rem;
+      color: var(--text-color);
+      background: var(--table-bg);
+    }
+
+    .toolbar button {
+      padding: 10px 18px;
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s ease;
+    }
+
+    .toolbar button:hover {
+      background: #4548d2;
+    }
+
+    /* Table */
+    .table-wrapper {
+      padding: 20px 30px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--table-bg);
+      border-radius: 10px;
+    }
+
+    th, td {
+      padding: 14px 18px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    th {
+      background: var(--th-bg);
+      color: var(--th-color);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      position: sticky;
+      top: 0;
+    }
+
+    td {
+      font-size: 0.92rem;
+      color: var(--text-color);
+    }
+
+    tr:hover {
+      background: var(--hover-bg);
+      transition: 0.2s ease;
+    }
+
+    .message-cell {
+      max-width: 350px;
+      word-wrap: break-word;
+    }
+
+    .timestamp {
+      color: var(--timestamp-color);
+      white-space: nowrap;
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .no-messages {
+      text-align: center;
+      padding: 60px;
+      color: #888;
+      font-style: italic;
+      font-size: 1.1rem;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { height: 8px; }
+    ::-webkit-scrollbar-thumb { background: #b0b3ff; border-radius: 10px; }
+
+    /* Dark mode switch (auto toggle) */
+    @media (max-width: 768px) {
+      .toolbar input {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Contact Messages</h1>
+      <form action="{{ url_for('admin_logout') }}" method="get">
+        <button class="logout-btn">Logout</button>
+      </form>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <input type="text" id="search" placeholder="Search messages..." onkeyup="filterMessages()">
+      <button onclick="exportTableToCSV()">📥 Export CSV</button>
+    </div>
+
+    <!-- Messages Table -->
+    {% if messages %}
+    <div class="table-wrapper">
+      <table id="messagesTable">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Subject</th>
+            <th>Message</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for message in messages %}
+          <tr>
+            <td>{{ message.name }}</td>
+            <td>{{ message.email }}</td>
+            <td>{{ message.subject if message.subject else 'No subject' }}</td>
+            <td class="message-cell">{{ message.message }}</td>
+            <td class="timestamp">{{ message.timestamp }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="no-messages">
+      <p>No messages found in the database.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <script>
+    // 🔍 Live Search
+    function filterMessages() {
+      let input = document.getElementById("search").value.toLowerCase();
+      let rows = document.querySelectorAll("#messagesTable tbody tr");
+      rows.forEach(row => {
+        row.style.display = row.textContent.toLowerCase().includes(input) ? "" : "none";
+      });
+    }
+
+    // 📥 Export to CSV
+    function exportTableToCSV() {
+      let rows = document.querySelectorAll("#messagesTable tr");
+      let csv = [];
+      rows.forEach(row => {
+        let cols = Array.from(row.querySelectorAll("td, th")).map(e => `"${e.innerText}"`);
+        csv.push(cols.join(","));
+      });
+      let blob = new Blob([csv.join("\n")], { type: "text/csv" });
+      let link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "messages.csv";
+      link.click();
+    }
+
+    // 🌗 Dark Mode Sync
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark-mode");
+    }
+
+    window.addEventListener("storage", function(e) {
+      if (e.key === "theme") {
+        document.body.classList.toggle("dark-mode", e.newValue === "dark");
+      }
+    });
+  </script>
+</body>
+</html>

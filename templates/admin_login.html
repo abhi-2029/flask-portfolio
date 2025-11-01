@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | Portfolio</title>
+  <style>
+    /* ===== General Reset ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #2d3091, #5a5de6);
+      color: #fff;
+      overflow: hidden;
+    }
+
+    /* ===== Animated Background Circles ===== */
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      animation: float 8s infinite ease-in-out alternate;
+    }
+
+    .circle:nth-child(1) {
+      width: 120px;
+      height: 120px;
+      top: 10%;
+      left: 20%;
+      animation-delay: 0s;
+    }
+
+    .circle:nth-child(2) {
+      width: 200px;
+      height: 200px;
+      bottom: 15%;
+      right: 25%;
+      animation-delay: 2s;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(30px); }
+    }
+
+    /* ===== Login Container ===== */
+    .login-container {
+      position: relative;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      padding: 40px 35px;
+      width: 360px;
+      text-align: center;
+      color: #fff;
+      z-index: 10;
+    }
+
+    .login-container h2 {
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      color: #e0e0e0;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+      transition: 0.3s ease;
+    }
+
+    input[type="password"]::placeholder {
+      color: #ddd;
+    }
+
+    input[type="password"]:focus {
+      background: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #3a3ddf, #6f73ff);
+      color: white;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #5659e6, #8a8fff);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(98, 105, 255, 0.3);
+    }
+
+    .error {
+      color: #ff6b6b;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .back-link {
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .back-link a {
+      color: #cfd2ff;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: color 0.3s ease;
+    }
+
+    .back-link a:hover {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 400px) {
+      .login-container {
+        width: 90%;
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="circle"></div>
+  <div class="circle"></div>
+
+  <div class="login-container">
+    <h2>Admin Login</h2>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label for="password">Enter Admin Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="••••••••••"
+          required
+        />
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="back-link">
+      <a href="{{ url_for('index') }}">← Back to Home</a>
+    </div>
+  </div>
+</body>
+</html>

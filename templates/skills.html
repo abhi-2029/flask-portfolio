@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: #2d3091;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .skill-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .skill-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .skill-logo-container {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #f8f9fa;
+            padding: 12px;
+        }
+        
+        .skill-logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .skill-item span {
+            display: block;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #2d3091;
+            margin-top: 5px;
+        }
+        
+        .skill-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3091;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 10;
+            margin-bottom: 10px;
+        }
+        
+        .skill-tooltip:after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: #2d3091 transparent transparent transparent;
+        }
+        
+        .skill-item:hover .skill-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        @media (max-width: 768px) {
+            .skills-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 15px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .skill-logo-container {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section id="skills" class="section">
+        <div class="container">
+            <h2 class="section-title">Skills</h2>
+            <div class="skills-container">
+                <div class="skills-grid">
+
+                    <!-- Programming Languages -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="C++">
+                        </div>
+                        <span>C++</span>
+                        <div class="skill-tooltip">Advanced proficiency with STL and OOP</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java">
+                        </div>
+                        <span>Java</span>
+                        <div class="skill-tooltip">Object-oriented programming</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python">
+                        </div>
+                        <span>Python</span>
+                        <div class="skill-tooltip">Data analysis and scripting</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
+                        </div>
+                        <span>JavaScript</span>
+                        <div class="skill-tooltip">Frontend development</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript">
+                        </div>
+                        <span>TypeScript</span>
+                        <div class="skill-tooltip">Strongly typed JavaScript</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
+                        </div>
+                        <span>HTML5</span>
+                        <div class="skill-tooltip">Semantic markup</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3">
+                        </div>
+                        <span>CSS3</span>
+                        <div class="skill-tooltip">Responsive design</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" alt="Tailwind CSS">
+                        </div>
+                        <span>Tailwind CSS</span>
+                        <div class="skill-tooltip">Utility-first responsive styling</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="SQL">
+                        </div>
+                        <span>SQL</span>
+                        <div class="skill-tooltip">Database management</div>
+                    </div>
+
+                    <!-- SQLite -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg" alt="SQLite">
+                        </div>
+                        <span>SQLite</span>
+                        <div class="skill-tooltip">Lightweight database engine</div>
+                    </div>
+
+                    <!-- DSA -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2721/2721290.png" alt="DSA">
+                        </div>
+                        <span>DSA</span>
+                        <div class="skill-tooltip">Data Structures and Algorithms</div>
+                    </div>
+
+                    <!-- Apache Kafka -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://www.vectorlogo.zone/logos/apache_kafka/apache_kafka-icon.svg" alt="Apache Kafka">
+                        </div>
+                        <span>Apache Kafka</span>
+                        <div class="skill-tooltip">Distributed event streaming</div>
+                    </div>
+
+                    <!-- Apache Spark -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f3/Apache_Spark_logo.svg" alt="Apache Spark">
+                        </div>
+                        <span>Apache Spark</span>
+                        <div class="skill-tooltip">Big data processing</div>
+                    </div>
+
+                    <!-- DevOps & Tools -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Linux">
+                        </div>
+                        <span>Linux</span>
+                        <div class="skill-tooltip">System administration</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker">
+                        </div>
+                        <span>Docker</span>
+                        <div class="skill-tooltip">Containerization</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" alt="Kubernetes">
+                        </div>
+                        <span>Kubernetes</span>
+                        <div class="skill-tooltip">Container orchestration</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg" alt="Jenkins">
+                        </div>
+                        <span>Jenkins</span>
+                        <div class="skill-tooltip">CI/CD pipelines</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://avatars.githubusercontent.com/u/44036562?s=200&v=4" alt="GitHub Actions">
+                        </div>
+                        <span>GitHub Actions</span>
+                        <div class="skill-tooltip">Automated workflows</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://compote.slate.com/images/2119ff95-86f2-4546-a8fd-7b70ec58c9c6.jpeg?crop=1560%2C1040%2Cx0%2Cy0" alt="AWS">
+                        </div>
+                        <span>AWS</span>
+                        <div class="skill-tooltip">Cloud services</div>
+                    </div>
+
+                    <!-- Data Analysis -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn-icons-png.flaticon.com/512/732/732220.png" alt="MS Excel">
+                        </div>
+                        <span>MS Excel</span>
+                        <div class="skill-tooltip">Data analysis</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://w7.pngwing.com/pngs/815/646/png-transparent-tableau-full-logo-tech-companies.png" alt="Tableau">
+                        </div>
+                        <span>Tableau</span>
+                        <div class="skill-tooltip">Data visualization</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/c/cf/New_Power_BI_Logo.svg" alt="Power BI">
+                        </div>
+                        <span>Power BI</span>
+                        <div class="skill-tooltip">Business intelligence</div>
+                    </div>
+
+                    <!-- Version Control -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git">
+                        </div>
+                        <span>Git</span>
+                        <div class="skill-tooltip">Version control</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub">
+                        </div>
+                        <span>GitHub</span>
+                        <div class="skill-tooltip">Code collaboration</div>
+                    </div>
+
+                    <!-- IDEs & Tools -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code">
+                        </div>
+                        <span>VS Code</span>
+                        <div class="skill-tooltip">Code editor</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jupyter/jupyter-original.svg" alt="Jupyter Notebook">
+                        </div>
+                        <span>Jupyter</span>
+                        <div class="skill-tooltip">Interactive computing</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pycharm/pycharm-original.svg" alt="PyCharm">
+                        </div>
+                        <span>PyCharm</span>
+                        <div class="skill-tooltip">Python IDE</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/intellij/intellij-original.svg" alt="IntelliJ">
+                        </div>
+                        <span>IntelliJ</span>
+                        <div class="skill-tooltip">Java IDE</div>
+                    </div>
+
+                    <!-- Python Libraries -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" alt="NumPy">
+                        </div>
+                        <span>NumPy</span>
+                        <div class="skill-tooltip">Numerical computing</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/8/84/Matplotlib_icon.svg" alt="Matplotlib">
+                        </div>
+                        <span>Matplotlib</span>
+                        <div class="skill-tooltip">Data visualization</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" alt="Pandas">
+                        </div>
+                        <span>Pandas</span>
+                        <div class="skill-tooltip">Data manipulation</div>
+                    </div>
+
+                    <!-- Web Development -->
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React.js">
+                        </div>
+                        <span>React.js</span>
+                        <div class="skill-tooltip">Frontend framework</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js">
+                        </div>
+                        <span>Node.js</span>
+                        <div class="skill-tooltip">Backend runtime</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" alt="Flask">
+                        </div>
+                        <span>Flask</span>
+                        <div class="skill-tooltip">Web framework</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="MongoDB">
+                        </div>
+                        <span>MongoDB</span>
+                        <div class="skill-tooltip">Database</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" alt="Express.js">
+                        </div>
+                        <span>Express.js</span>
+                        <div class="skill-tooltip">Backend framework</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn-icons-png.flaticon.com/512/2165/2165004.png" alt="REST APIs">
+                        </div>
+                        <span>REST APIs</span>
+                        <div class="skill-tooltip">Web services</div>
+                    </div>
+
+                    <div class="skill-item">
+                        <div class="skill-logo-container">
+                            <img src="https://cdn-icons-png.flaticon.com/512/4834/4834766.png" alt="API Development">
+                        </div>
+                        <span>API Development</span>
+                        <div class="skill-tooltip">Building scalable API endpoints</div>
+                        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

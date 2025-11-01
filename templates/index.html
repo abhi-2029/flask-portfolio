@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhishek Ranjan | Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body class="home-page">
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+        <i class="fas fa-sun sun"></i>
+        <i class="fas fa-moon moon"></i>
+    </div>
+
+    <div id="cube-container"></div>
+    <div id="particles-js"></div>
+    
+    <!-- Scroll to top button -->
+    <div class="scroll-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <header>
+        <div class="container">
+            <div class="logo">AR</div>
+            <nav>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#education">Education</a></li>
+                    <li><a href="#achievements">Achievements</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Abhishek Ranjan</h1>
+                    <h2 class="typewriter">Computer Science Engineer</h2>
+                    <p>Passionate about Data Structures, Algorithms, and building innovative solutions.</p>
+                    <div class="social-links">
+                        <a href="https://linkedin.com/in/abhishekranjan20" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://github.com/abhi-2029" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="mailto:abhisheksingh70224@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+                        <a href="https://leetcode.com/u/abhishek__ranjan/" target="_blank" title="LeetCode"><i class="fas fa-code"></i></a>
+                    </div>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn">Get In Touch</a>
+                        <a href="{{ url_for('static', filename='docs/AbhishekSpecializedCV.pdf') }}" class="btn btn-cv" target="_blank">View CV</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="image-placeholder">
+                        <img src="{{ url_for('static', filename='images/my-image.jpg') }}" alt="Abhishek Ranjan" class="profile-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- SKILLS SECTION LINK -->
+        
+        {% include 'skills.html' %}
+
+
+
+        <!-- Experience SECTION LINK -->
+
+        {% include 'experience.html' %}
+        
+
+        <!-- PROJECTS SECTION LINK -->
+
+        {% include 'projects.html' %}
+
+
+
+
+        <!-- EDUCATION SECTION -->
+
+        {% include 'education.html' %}
+
+
+
+        <!-- ACHIEVEMENT SECTION  -->
+
+        <section id="achievements" class="section">
+            <div class="container">
+                <h2 class="section-title">Achievements</h2>
+                <div class="achievements-grid">
+                    <div class="achievement-card" data-modal="modal-hackerrank">
+                        <i class="fas fa-star"></i>
+                        <h3>HackerRank</h3>
+                        <p>5-star ratings in C++, Python, and SQL</p>
+                        <div class="achievement-badge">
+                            <p>Verified</p>
+                        </div>
+                        <a href="https://www.hackerrank.com/profile/abhisheksingh704" class="profile-btn" target="_blank">Connect to My Profile <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    </div>
+
+                    <div class="achievement-card">
+                        <i class="fas fa-code"></i>
+                        <h3>LeetCode</h3>
+                        <p>
+                            Global rank of <strong>50,455</strong> in LeetCode contests with a rating of <strong>1817</strong> among 
+                            <strong>751,438+</strong> participants
+                        </p>
+                        <p>Top 7%</p>
+                        <a href="https://leetcode.com/u/abhishek__ranjan/" target="_blank" class="profile-link">
+                            Connect to My Profile <i class="fas fa-external-link-alt"></i>
+                        </a>
+                    </div>
+
+
+
+                    <div class="achievement-card" data-modal="modal-gfg">
+                    <i class="fas fa-trophy"></i>
+                    <h3>GeeksforGeeks</h3>
+                    <p>Global rank of <strong>7400</strong> in C++ with DSA Contest among <strong>30183 +</strong> participants</p>
+                    <div class="achievement-badge">
+                        <p>Top 24%</p>
+                    </div>
+                    <a href="https://www.geeksforgeeks.org/user/abhishekranjan2029/" class="profile-btn" target="_blank">
+                        Connect to My Profile <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievement Modals -->
+            <div id="modal1" class="achievement-modal">
+                <div class="modal-content">
+                    <i class="fas fa-star fa-3x" style="color: #f1c40f; margin-bottom: 15px;"></i>
+                    <h3>HackerRank Achievement</h3>
+                    <p>Earned 5-star ratings in C++, Python, and SQL through consistent problem-solving and coding challenges. Demonstrated proficiency in algorithms, data structures, and database concepts.</p>
+                    <div class="achievement-proof">
+                        <a href="YOUR_HACKERRANK_CERTIFICATE_LINK" class="btn" target="_blank">View Certificate</a>
+                        <a href="https://www.hackerrank.com/profile/abhisheksingh704" class="btn" target="_blank">View Profile</a>
+                    </div>
+                    <button class="btn close-modal">Close</button>
+                </div>
+            </div>
+            <div id="modal2" class="achievement-modal">
+                <div class="modal-content">
+                    <i class="fas fa-trophy fa-3x" style="color: #e67e22; margin-bottom: 15px;"></i>
+                    <h3>GeeksforGeeks Achievement</h3>
+                    <p>Secured a global rank of 6931 in a C++ DSA contest, competing against over 100,000 participants worldwide. Showcased strong problem-solving skills and efficient coding practices.</p>
+                    <div class="achievement-proof">
+                        <a href="YOUR_GEEKSFORGEEKS_CERTIFICATE_LINK" class="btn" target="_blank">View Certificate</a>
+                        <a href="https://www.geeksforgeeks.org/user/abhishekranjan2029/?_gl=1*m9lel5*_up*MQ..*_gs*MQ..&gclid=Cj0KCQjw5azABhD1ARIsAA0WFUHohVQfZpYpfaIi4vbmjYNkEqVcEvItfBlBrRjSVBVWnWJqN8QMywwaAo7lEALw_wcB&gbraid=0AAAAAC9yBkBHNXKsNNRbxjRiJQXRisqfc" class="btn" target="_blank">View Profile</a>
+                    </div>
+                    <button class="btn close-modal">Close</button>
+                </div>
+            </div>
+            <div id="modal3" class="achievement-modal">
+                <div class="modal-content">
+                    <i class="fas fa-medal fa-3x" style="color: #95a5a6; margin-bottom: 15px;"></i>
+                    <h3>English Quiz Competition</h3>
+                    <p>Achieved runner-up position in the 2024 University English Quiz Competition at LPU, showcasing strong communication skills, vocabulary, and comprehension abilities among 50+ participants.</p>
+                    <div class="achievement-proof">
+                        <a href="YOUR_ENGLISH_QUIZ_CERTIFICATE_LINK" class="btn" target="_blank">View Certificate</a>
+                    </div>
+                    <button class="btn close-modal">Close</button>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <!-- CERTIFICATION SECTION -->
+
+
+        <section id="certificates" class="section">
+            <div class="container">
+                <h2 class="section-title">Certificates</h2>
+                <div class="certificates-grid">
+                    <div class="certificate-card">
+                        <div class="certificate-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <h3>Python Basic | HackerRank</h3>
+                        <p>Jan 2025</p>
+                        <a href="https://drive.google.com/file/d/1AKRKwHW78BshTHS4QYDI4YHM31Nr3k-Z/view?usp=drive_link" class="btn view-certificate-btn" target="_blank">View</a>
+                    </div>
+                    <div class="certificate-card">
+                        <div class="certificate-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <h3>Mastering Data Structures and Algorithms - Board Infinity</h3>
+                        <p>Jul 2024</p>
+                        <a href="https://drive.google.com/file/d/1vQjyZdEH9lj8gh8HrCu7tatMA-LluDJL/view?usp=drive_link" class="btn view-certificate-btn" target="_blank">View</a>
+                    </div>
+                    <div class="certificate-card">
+                        <div class="certificate-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <h3>Data Structures and Algorithms | Udemy</h3>
+                        <p>Feb 2024</p>
+                        <a href="https://drive.google.com/file/d/1xFfUxN-klaluX-ag_urMdsuKKexvhQb7/view?usp=drive_link" class="btn view-certificate-btn" target="_blank">View</a>
+                    </div>
+                    <div class="certificate-card">
+                        <div class="certificate-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <h3>Programming in C++ - Coursera</h3>
+                        <p>Feb 2024</p>
+                        <a href="https://drive.google.com/file/d/1NLuIP7VvmAuuDDlglSWRQO7jV54Icc1C/view?usp=drive_link" class="btn view-certificate-btn" target="_blank">View</a>
+                    </div>
+                    <div class="certificate-card">
+                        <div class="certificate-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <h3>Introduction to Microsoft Excel | Coursera</h3>
+                        <p>Dec 2022</p>
+                        <a href="https://drive.google.com/file/d/1vCLvQE3FwRJ2nDtyVgGLzURtBD35vXwv/view?usp=drive_link" class="btn view-certificate-btn" target="_blank">View</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+        <!-- CONTACT SECTION LINK -->
+
+        {% include 'contact.html' %}
+
+        
+        
+    </main>
+
+     <footer>
+        <div class="container">
+            <p>© 2025 Abhishek Ranjan. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/abhishekranjan20" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/abhi-2029" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="mailto:abhisheksingh70224@gmail.com"><i class="fas fa-envelope"></i></a>
+            </div>
+            <!-- 🔒 Hidden Admin Access Link -->
+            <a id="admin-link" href="/admin" style="display:none; color:#aaa; font-size:0.8rem; text-decoration:none;">
+                Admin Access
+            </a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    
+    <!-- Add this script for form handling -->
+    <script>
+    document.getElementById('contactForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const submitText = form.querySelector('.submit-text');
+        const sendingText = form.querySelector('.sending-text');
+        
+        // Show sending state
+        submitText.style.display = 'none';
+        sendingText.style.display = 'inline-block';
+        
+        // Submit form data
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            submitText.style.display = 'inline-block';
+            sendingText.style.display = 'none';
+        });
+    });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contact-form');  // Changed to use ID
+    const submitBtn = form.querySelector('[type="submit"]');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.value = 'Sending...';
+        
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect;
+            } else {
+                alert(data.error || 'Submission failed');
+                submitBtn.disabled = false;
+                submitBtn.value = 'Send Message';
+            }
+        })
+        .catch(error => {
+            alert('An error occurred');
+            submitBtn.disabled = false;
+            submitBtn.value = 'Send Message';
+        });
+    });
+});
+
+  // Hidden Admin Shortcut (Ctrl + A)
+  document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key.toLowerCase() === 'a') {
+          window.location.href = '/admin';
+      }
+  });
+
+  // Optional: Blink effect if you want visual feedback
+  const adminLink = document.getElementById('admin-link');
+  document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key.toLowerCase() === 'a') {
+          adminLink.style.display = 'inline';
+          adminLink.style.animation = 'blink 0.4s steps(2, start) 3';
+          setTimeout(() => adminLink.style.display = 'none', 1500);
+      }
+  });
+
+  // Blink animation (optional)
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes blink {
+      to { visibility: hidden; }
+    }
+  `;
+  document.head.appendChild(style);
+
+
+    
+    </script>
+</body>
+</html>
