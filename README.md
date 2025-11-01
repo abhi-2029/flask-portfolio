@@ -64,13 +64,18 @@ ADMIN_PASSWORD=Abhi@
 
 
 ---
+## 👨‍💻 Author
+
+**Abhishek Ranjan**  
+🎓 *Computer Science Engineer* | 📍 *India*  
+
+🌐 [LinkedIn](https://www.linkedin.com/in/abhishekranjan20/) | [GitHub](https://github.com/abhi-2029)
 
 ## 🧠 Running Locally
 
 ### 1️⃣ Create Virtual Environment
 ```bash
 python -m venv venv
-
 2️⃣ Activate It
 venv\Scripts\activate
 Mac/Linux:
@@ -132,12 +137,6 @@ MIT License © 2025 Abhishek Ranjan
 5. Add your environment variables under “Environment”  
 6. Click **Deploy**
 
-## 👨‍💻 Author
-
-**Abhishek Ranjan**  
-🎓 *Computer Science Engineer* | 📍 *India*  
-
-🌐 [LinkedIn](https://www.linkedin.com/in/abhishekranjan20/) | [GitHub](https://github.com/abhi-2029)
 
 
 ✅ Within 2–3 minutes, your Flask portfolio will go live with a permanent Render link like:
