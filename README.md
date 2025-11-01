@@ -21,6 +21,38 @@ A personal portfolio built using **Flask**, **HTML**, **CSS**, and **JavaScript*
 **Deployment:** Render  
 
 ---
+
+🗂️ Folder Structure
+```
+flask-portfolio/
+│
+├── app.py                         # Main Flask backend file
+├── requirements.txt               # Python dependencies
+├── .env                           # Environment variables (SECRET_KEY, ADMIN_PASSWORD)
+├── README.md                      # Documentation (fixed version below)
+│
+├── instance/                      # Database folder (auto-created)
+│   └── messages.db                # SQLite database (auto-generated)
+│
+├── static/
+│   ├── css/
+│   │   └── style.css              # Your main CSS file
+│   ├── js/
+│   │   └── script.js              # JS file for UI, animations, etc.
+│   └── images/
+│       └── my-image.jpg           # Your profile image
+│
+└── templates/
+    ├── index.html                 # Main portfolio HTML
+    ├── skills.html                # Included in index
+    ├── experience.html            # Included in index
+    ├── projects.html              # Included in index
+    ├── education.html             # Included in index
+    ├── contact.html               # Included in index
+    ├── admin_login.html           # Admin login page
+    ├── admin_messages.html        # Messages dashboard
+    └── thank_you.html             # After message submission
+```
 ## ⚙️ Setup Instructions  
 
 ### 1️⃣ Clone the repository  
@@ -99,5 +131,5 @@ MIT License © 2025 Abhishek Ranjan
 
 🧠 Quote
 
-“Code is like humor. When you have to explain it, it’s bad.” — Cory House
+“Code is like humor. When you have to explain it, it’s bad.”
 
