@@ -8,9 +8,8 @@ import os
 from dotenv import load_dotenv
 
 
-# ----------------------------
 # Load environment variables
-# ----------------------------
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -24,9 +23,8 @@ ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'Abhi@')
 BASE_DIR = Path(__file__).parent
 DATABASE = BASE_DIR / 'messages.db'
 
-# ----------------------------
 # Database connection handling
-# ----------------------------
+
 def get_db():
     if not hasattr(g, '_database'):
         g._database = sqlite3.connect(DATABASE)
@@ -61,9 +59,9 @@ def init_db():
     except Exception as e:
         print(f"✗ Database initialization failed: {e}")
 
-# ----------------------------
+
 # Authentication decorator
-# ----------------------------
+
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -72,9 +70,8 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# ----------------------------
+
 # Routes
-# ----------------------------
 
 @app.route('/')
 def index():
@@ -134,9 +131,7 @@ def thank_you():
     response.headers['Expires'] = '0'
     return response
 
-# ----------------------------
 # Admin routes
-# ----------------------------
 
 @app.route('/admin')
 def admin_home():
@@ -179,9 +174,8 @@ def admin_logout():
     session.pop('is_admin', None)
     return redirect(url_for('index'))
 
-# ----------------------------
 # Debug routes (optional)
-# ----------------------------
+
 @app.route('/debug/messages')
 def debug_messages():
     db = get_db()
@@ -192,9 +186,7 @@ def debug_messages():
 def debug_session():
     return jsonify(dict(session))
 
-# ----------------------------
 # Main entry point
-# ----------------------------
 if __name__ == '__main__':
     if not DATABASE.exists():
         init_db()
