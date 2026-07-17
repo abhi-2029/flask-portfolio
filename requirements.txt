@@ -18,6 +18,8 @@ python-dotenv==1.0.0
 
 # Deployment (optional)
 gunicorn==20.1.0
+setuptools
+
 
 
 
