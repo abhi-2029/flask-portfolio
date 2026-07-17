@@ -90,6 +90,13 @@ flask-portfolio/
     SECRET_KEY=your_development_secret_key_here
     ADMIN_PASSWORD=your_secure_admin_password
     # Optional: DATABASE_URL=postgres://... (Falls back to SQLite if omitted)
+
+    # Optional: SMTP Email Notifications
+    MAIL_SERVER=smtp.gmail.com
+    MAIL_PORT=587
+    MAIL_USERNAME=your_gmail_address@gmail.com
+    MAIL_PASSWORD=your_gmail_app_password
+    MAIL_RECIPIENT=your_recipient_email@gmail.com
     ```
 
 5.  **Run the Server:**

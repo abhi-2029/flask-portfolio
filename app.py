@@ -6,6 +6,10 @@ from functools import wraps
 import sqlite3
 from pathlib import Path
 import os
+import threading
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from dotenv import load_dotenv
 
 
@@ -25,6 +29,59 @@ ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'Abhi@')
 BASE_DIR = Path(__file__).parent
 DATABASE = BASE_DIR / 'messages.db'
 DATABASE_URL = os.getenv('DATABASE_URL')
+
+# Mail configuration
+MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
+try:
+    MAIL_PORT = int(os.getenv('MAIL_PORT', 587))
+except (TypeError, ValueError):
+    MAIL_PORT = 587
+MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+MAIL_RECIPIENT = os.getenv('MAIL_RECIPIENT', 'abhisheksingh70224@gmail.com')
+
+def send_notification_email(sender_name, sender_email, subject, message):
+    if not all([MAIL_USERNAME, MAIL_PASSWORD]):
+        print("[INFO] Email notification skipped: SMTP credentials not set in .env")
+        return False
+        
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = MAIL_USERNAME
+        msg['To'] = MAIL_RECIPIENT
+        msg['Subject'] = f"Portfolio Contact: {subject or 'New Message'}"
+        
+        body = f"""
+You received a new message from your portfolio website:
+
+Name: {sender_name}
+Email: {sender_email}
+Subject: {subject or 'N/A'}
+
+Message:
+{message}
+"""
+        msg.attach(MIMEText(body, 'plain'))
+        
+        server = smtplib.SMTP(MAIL_SERVER, MAIL_PORT)
+        server.starttls()
+        server.login(MAIL_USERNAME, MAIL_PASSWORD)
+        server.sendmail(MAIL_USERNAME, MAIL_RECIPIENT, msg.as_string())
+        server.quit()
+        
+        print("[OK] Notification email sent successfully")
+        return True
+    except Exception as e:
+        print(f"[ERROR] Failed to send notification email: {e}")
+        return False
+
+def send_notification_email_async(sender_name, sender_email, subject, message):
+    thread = threading.Thread(
+        target=send_notification_email, 
+        args=(sender_name, sender_email, subject, message)
+    )
+    thread.daemon = True
+    thread.start()
 
 # ----------------------------
 # Database connection handling
@@ -162,6 +219,8 @@ def submit():
                     (name, email, subject, message),
                     commit=True
                 )
+                # Send email notification asynchronously in the background
+                send_notification_email_async(name, email, subject, message)
 
             return jsonify({
                 'success': True,
