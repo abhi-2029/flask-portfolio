@@ -1,4 +1,5 @@
 
+
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g, make_response
 from flask_wtf.csrf import CSRFProtect
 from functools import wraps
@@ -8,8 +9,9 @@ import os
 from dotenv import load_dotenv
 
 
+# ----------------------------
 # Load environment variables
-
+# ----------------------------
 load_dotenv()
 
 app = Flask(__name__)
@@ -23,8 +25,9 @@ ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'Abhi@')
 BASE_DIR = Path(__file__).parent
 DATABASE = BASE_DIR / 'messages.db'
 
+# ----------------------------
 # Database connection handling
-
+# ----------------------------
 def get_db():
     if not hasattr(g, '_database'):
         g._database = sqlite3.connect(DATABASE)
@@ -59,9 +62,9 @@ def init_db():
     except Exception as e:
         print(f"✗ Database initialization failed: {e}")
 
-
+# ----------------------------
 # Authentication decorator
-
+# ----------------------------
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -70,8 +73,9 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
+# ----------------------------
 # Routes
+# ----------------------------
 
 @app.route('/')
 def index():
@@ -131,7 +135,9 @@ def thank_you():
     response.headers['Expires'] = '0'
     return response
 
+# ----------------------------
 # Admin routes
+# ----------------------------
 
 @app.route('/admin')
 def admin_home():
@@ -174,22 +180,21 @@ def admin_logout():
     session.pop('is_admin', None)
     return redirect(url_for('index'))
 
-# Debug routes (optional)
-
-@app.route('/debug/messages')
-def debug_messages():
-    db = get_db()
-    messages = db.execute('SELECT * FROM messages').fetchall()
-    return jsonify([dict(msg) for msg in messages])
-
-@app.route('/debug/session')
-def debug_session():
-    return jsonify(dict(session))
-
+# ----------------------------
 # Main entry point
+# ----------------------------
 if __name__ == '__main__':
     if not DATABASE.exists():
         init_db()
+
+    # Configuration sanity checks
+    # If not running in debug/dev, raise error for insecure defaults
+    is_debug = os.getenv('FLASK_DEBUG', 'false').lower() in ('true', '1') or app.debug
+    if not is_debug:
+        if app.secret_key == 'default_secret_key':
+            raise RuntimeError("CRITICAL: Flask SECRET_KEY cannot be default_secret_key in production!")
+        if ADMIN_PASSWORD == 'Abhi@':
+            raise RuntimeError("CRITICAL: ADMIN_PASSWORD cannot be Abhi@ in production!")
 
     # Remove duplicate entries on startup
     with app.app_context():
@@ -205,3 +210,4 @@ if __name__ == '__main__':
         db.commit()
 
     app.run(debug=True, port=5000)
+

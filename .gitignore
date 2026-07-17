@@ -1,1 +1,30 @@
+# Flask / Python environment
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
 .env
+.env.local
+.env.*.local
+
+# Databases and user data
+*.db
+*.sqlite
+messages.json
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db

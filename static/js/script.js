@@ -350,92 +350,75 @@ function initStickyHeader() {
 
 // Initialize All Functions
 document.addEventListener('DOMContentLoaded', function() {
-    initCubeBackground();
+    // initCubeBackground(); // Disabled for mobile performance & canvas overlapping lag
     initParticles();
     initSmoothScrolling();
     initScrollToTop();
     initIntersectionObserver();
     initCVButton();
-    initContactForm();
     initAchievementModals();
     initCopyButtons();
     initTypewriter();
     initCertificateButtons();
     initMobileMenu();
     initStickyHeader();
-});
 
-
-
-
-
-// contact form
-
-document.addEventListener('DOMContentLoaded', function() {
+    // Contact Form AJAX Handling
     const form = document.getElementById('contactForm');
-    if (!form) return;
-
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalText = submitBtn.innerHTML;
-        
-        // Show loading state
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-
-        try {
-            const formData = new FormData(form);
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
             
-            // Add AJAX header
-            formData.append('is_ajax', 'true');
-            
-            const response = await fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const formData = new FormData(form);
+                formData.append('is_ajax', 'true');
+                
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    alert(data.error || 'Submission failed. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
                 }
-            });
-
-            const data = await response.json();
-            
-            if (data.success) {
-                // Successful submission - redirect
-                window.location.href = data.redirect;
-            } else {
-                // Show error message
-                alert(data.error || 'Submission failed. Please try again.');
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Network error occurred. Please check your connection.');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Network error occurred. Please check your connection.');
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalText;
-        }
-    });
-});
-
-
-
-
-
-// Example using Fetch API
-document.querySelector('form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    
-    const response = await fetch('/submit', {
-        method: 'POST',
-        body: formData
-    });
-    
-    const result = await response.json();
-    if (result.success) {
-        window.location.href = result.redirect;  // This will go to /thank-you
-    } else {
-        alert(result.error || 'Submission failed');
+        });
     }
 });
+
+// Hidden Admin Shortcut (Ctrl + A)
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key.toLowerCase() === 'a') {
+        const adminLink = document.getElementById('admin-link');
+        if (adminLink) {
+            adminLink.style.display = 'inline';
+            adminLink.style.animation = 'blink 0.4s steps(2, start) 3';
+            setTimeout(() => {
+                adminLink.style.display = 'none';
+                window.location.href = '/admin';
+            }, 1200);
+        } else {
+            window.location.href = '/admin';
+        }
+    }
+});

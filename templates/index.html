@@ -8,8 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-
 </head>
 <body class="home-page">
     <!-- Loading Screen -->
@@ -277,115 +275,5 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    
-    <!-- Add this script for form handling -->
-    <script>
-    document.getElementById('contactForm')?.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const form = this;
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const submitText = form.querySelector('.submit-text');
-        const sendingText = form.querySelector('.sending-text');
-        
-        // Show sending state
-        submitText.style.display = 'none';
-        sendingText.style.display = 'inline-block';
-        
-        // Submit form data
-        fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: {
-                'Accept': 'application/json'
-            }
-        })
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            submitText.style.display = 'inline-block';
-            sendingText.style.display = 'none';
-        });
-    });
-
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('contact-form');  // Changed to use ID
-    const submitBtn = form.querySelector('[type="submit"]');
-    
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        submitBtn.disabled = true;
-        submitBtn.value = 'Sending...';
-        
-        fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.href = data.redirect;
-            } else {
-                alert(data.error || 'Submission failed');
-                submitBtn.disabled = false;
-                submitBtn.value = 'Send Message';
-            }
-        })
-        .catch(error => {
-            alert('An error occurred');
-            submitBtn.disabled = false;
-            submitBtn.value = 'Send Message';
-        });
-    });
-});
-
-  // Hidden Admin Shortcut (Ctrl + A)
-  document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && e.key.toLowerCase() === 'a') {
-          window.location.href = '/admin';
-      }
-  });
-
-  // Optional: Blink effect if you want visual feedback
-  const adminLink = document.getElementById('admin-link');
-  document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && e.key.toLowerCase() === 'a') {
-          adminLink.style.display = 'inline';
-          adminLink.style.animation = 'blink 0.4s steps(2, start) 3';
-          setTimeout(() => adminLink.style.display = 'none', 1500);
-      }
-  });
-  12
-  // Blink animation (optional)
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes blink {
-      to { visibility: hidden; }
-    }
-  `;
-  document.head.appendChild(style);
-
-
-
-  // for mobile ui
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('header nav ul');
-
-hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    hamburger.classList.toggle('open');
-});
-
-document.querySelectorAll('header nav ul li a').forEach(link => {
-    link.addEventListener('click', () => {
-        navMenu.classList.remove('active');
-        hamburger.classList.remove('open');
-    });
-});
-    
-    </script>
 </body>
 </html>
