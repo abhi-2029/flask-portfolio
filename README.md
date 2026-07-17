@@ -1,135 +1,138 @@
-# 🌐 Flask Portfolio Website  
+# 🌐 Flask SDE Portfolio Website
 
-A personal portfolio built using **Flask**, **HTML**, **CSS**, and **JavaScript**, featuring responsive UI, dark mode, admin dashboard, and database integration for message storage.
-
----
-
-## 🚀 Features
-- 🎨 Modern and responsive UI  
-- 🌙 Dark & light mode toggle  
-- 📬 Contact form with database storage  
-- 🔐 Admin login panel to view messages  
-- 🧠 Built using Flask + SQLite3  
-- ☁️ Deployable on **Render** or **Vercel**
+A personal portfolio built using **Flask (Python)**, **HTML5**, **CSS3 (Vanilla)**, and **JavaScript**, featuring a responsive developer UI, dark mode toggle, contact message database backend, local container orchestration, and cloud database compatibility.
 
 ---
 
-## 🛠️ Tech Stack
-**Frontend:** HTML, CSS, JavaScript  
-**Backend:** Flask (Python)  
-**Database:** SQLite3  
-**Deployment:** Render  
+## 🚀 Key Features
+
+*   **🎨 Premium Flat UI:** Sleek, high-fidelity developer interface with tags, icons, hover actions, and interactive details.
+*   **🌙 Dark & Light Mode Toggle:** Native light/dark themes with theme preference persistence.
+*   **📬 Contact Dashboard:** AJAX-based asynchronous form submissions with an integrated, secure admin message dashboard (`/admin`).
+*   **💾 Hybrid Database Adapter:** Automatically routes reads/writes to **PostgreSQL** in production environments (using `DATABASE_URL`), and falls back seamlessly to **SQLite** (`messages.db`) for lightweight local development.
+*   **🐳 Containerized Environments:** Completely configured with a production **Dockerfile** and local developer orchestration using **Docker Compose**.
+*   **☁️ Production-Ready:** Fully optimized and packaged for modern container-based clouds (like Render, Vercel, or Heroku) running Python 3.12/3.13.
 
 ---
 
-🗂️ Folder Structure
-```
+## 🛠️ Technology Stack
+
+*   **Core:** Python 3.13 / Flask / Gunicorn
+*   **Frontend:** Vanilla CSS3, Javascript, FontAwesome, Particles.js, Typed.js
+*   **Database:** PostgreSQL (Production / Neon / Supabase) & SQLite3 (Local)
+*   **DevOps:** Docker, Docker Compose, Git & GitHub Actions
+
+---
+
+## 🗂️ Folder Structure
+
+```text
 flask-portfolio/
 │
-├── app.py                         # Main Flask backend file
-├── requirements.txt               # Python dependencies
-├── .env                           # Environment variables (SECRET_KEY, ADMIN_PASSWORD)
-├── README.md                      # Documentation (fixed version below)
-│
-├── instance/                      # Database folder (auto-created)
-│   └── messages.db                # SQLite database (auto-generated)
+├── app.py                         # Main Flask backend controller (PostgreSQL & SQLite)
+├── requirements.txt               # Python package dependencies
+├── .env                           # Local environment secrets (SECRET_KEY, ADMIN_PASSWORD)
+├── Dockerfile                     # Production container blueprint
+├── docker-compose.yml             # Local multi-container development blueprint
+├── messages.db                    # Auto-generated local SQLite database (untracked)
 │
 ├── static/
 │   ├── css/
-│   │   └── style.css              # Your main CSS file
+│   │   └── style.css              # Custom styling sheet (fully responsive)
 │   ├── js/
-│   │   └── script.js              # JS file for UI, animations, etc.
+│   │   └── script.js              # Custom scripts, form validation, & animations
+│   ├── docs/
+│   │   └── AbhishekRanjanCV.pdf   # Latest curriculum vitae
 │   └── images/
-│       └── my-image.jpg           # Your profile image
+│       └── my-image.jpg           # Profile avatar
 │
 └── templates/
-    ├── index.html                 # Main portfolio HTML
-    ├── skills.html                # Included in index
-    ├── experience.html            # Included in index
-    ├── projects.html              # Included in index
-    ├── education.html             # Included in index
-    ├── contact.html               # Included in index
-    ├── admin_login.html           # Admin login page
-    ├── admin_messages.html        # Messages dashboard
-    └── thank_you.html             # After message submission
+    ├── index.html                 # Main landing layout
+    ├── skills.html                # Skills grid partial
+    ├── experience.html            # Experience timeline partial
+    ├── projects.html              # Custom project grid partial
+    ├── education.html             # Academic partial
+    ├── contact.html               # Contact form partial
+    ├── admin_login.html           # Admin credentials portal
+    ├── admin_messages.html        # Admin message panel
+    └── thank_you.html             # Redirection success confirmation page
 ```
-## ⚙️ Setup Instructions  
 
-### 1️⃣ Clone the repository  
-```bash
-git clone https://github.com/abhi-2029/flask-portfolio.git
-cd flask-portfolio
-```
-2️⃣ Create a virtual environment
-```
-python -m venv venv
-source venv/Scripts/activate   # On Windows
-source venv/bin/activate       # On Mac/Linux
-```
-3️⃣ Install dependencies
-```
-pip install -r requirements.txt
-```
-4️⃣ Run the app locally
-```
-python app.py
-```
-📦 Environment Variables
+---
 
-Create a .env file in your project root:
-```
-SECRET_KEY=your_secret_key  
-ADMIN_PASSWORD=...@
-```
-🧾 Requirements.txt Example
+## ⚙️ Setup & Installation
 
-If not already created, add this file:
-```
-Flask==3.0.3
-Flask-WTF==1.2.1
-python-dotenv==1.0.1
-gunicorn==23.0.0
-```
-☁️ Deployment (Render)
+### Option A: Local Run (Standard)
 
-1.Push your code to GitHub
+1.  **Clone the Repository:**
+    ```bash
+    git clone https://github.com/abhi-2029/flask-portfolio.git
+    cd flask-portfolio
+    ```
 
-2.Go to Render
- → New Web Service
+2.  **Create a Virtual Environment:**
+    ```bash
+    python -m venv venv
+    # Windows:
+    venv\Scripts\activate
+    # macOS/Linux:
+    source venv/bin/activate
+    ```
 
-3.Connect your GitHub repo
+3.  **Install Dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-4.Use these settings:
+4.  **Create local Environment Config:**  
+    Create a `.env` file in the root directory:
+    ```env
+    SECRET_KEY=your_development_secret_key_here
+    ADMIN_PASSWORD=your_secure_admin_password
+    # Optional: DATABASE_URL=postgres://... (Falls back to SQLite if omitted)
+    ```
 
-   .Build Command: pip install -r requirements.txt
+5.  **Run the Server:**
+    ```bash
+    python app.py
+    ```
+    Visit `http://127.0.0.1:5000` in your web browser.
 
-   .Start Command: gunicorn app:app
+### Option B: Local Run (Docker Container Orchestration)
 
-5.Add your environment variables under “Environment”
+To spin up the web app along with a local PostgreSQL container automatically:
 
-6.Click Deploy 🚀
+1.  **Start Containers:**
+    ```bash
+    docker compose up --build
+    ```
+2.  **Access the Portals:**
+    *   **Portfolio Website:** `http://localhost:5000`
+    *   **PostgreSQL Port:** Access local database via port `5432`
 
-🧩 Debugging on Render
+---
 
-If you get a 500 Internal Server Error,
+## ☁️ Production Deployment (Render)
 
-   .Check the Logs tab in Render → Dashboard → Your Service.
+1.  Create a new **Web Service** on Render and link your GitHub repository.
+2.  Configure the environment runtime settings:
+    *   **Build Command:** `pip install -r requirements.txt`
+    *   **Start Command:** `gunicorn app:app`
+3.  Configure **Environment Variables**:
+    *   `SECRET_KEY` = *[Your production secret]*
+    *   `ADMIN_PASSWORD` = *[Your admin login password]*
+    *   `DATABASE_URL` = *[Link a Render PostgreSQL Database to auto-bind]*
 
-   .You’ll see any Python or import-related errors there.
+---
 
 ## 👨‍💻 Author
 
 **Abhishek Ranjan**  
 🎓 *Computer Science Engineer* | 📍 *India*  
-
 🌐 [LinkedIn](https://www.linkedin.com/in/abhishekranjan20/) | [GitHub](https://github.com/abhi-2029)
 
+---
 
- 📜 License
+## 📜 License
 
 MIT License © 2025 Abhishek Ranjan
-
-🧠 Quote
-
-“Code is like humor. When you have to explain it, it’s bad.”
-
