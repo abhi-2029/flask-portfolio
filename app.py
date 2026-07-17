@@ -62,6 +62,8 @@ def db_execute(query, args=(), fetchall=False, fetchone=False, commit=False):
         query = query.replace("datetime('now', '-10 minutes')", "NOW() - INTERVAL '10 minutes'")
         query = query.replace("strftime('%Y-%m-%d %H:%M', timestamp)", "to_char(timestamp, 'YYYY-MM-DD HH24:MI')")
         query = query.replace("INTEGER PRIMARY KEY AUTOINCREMENT", "SERIAL PRIMARY KEY")
+        query = query.replace("DATETIME", "TIMESTAMP")
+        
         
         import psycopg2.extras
         cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -224,22 +226,21 @@ def admin_logout():
     return redirect(url_for('index'))
 
 # ----------------------------
-# Main entry point
+# Initialization & Security Checks (runs both locally and under Gunicorn)
 # ----------------------------
-if __name__ == '__main__':
-    if not DATABASE.exists():
-        init_db()
+# 1. Initialize database tables
+init_db()
 
-    # Configuration sanity checks
-    # If not running in debug/dev, raise error for insecure defaults
-    is_debug = os.getenv('FLASK_DEBUG', 'false').lower() in ('true', '1') or app.debug
-    if not is_debug:
-        if app.secret_key == 'default_secret_key':
-            raise RuntimeError("CRITICAL: Flask SECRET_KEY cannot be default_secret_key in production!")
-        if ADMIN_PASSWORD == 'Abhi@':
-            raise RuntimeError("CRITICAL: ADMIN_PASSWORD cannot be Abhi@ in production!")
+# 2. Configuration sanity checks (prevent running with insecure defaults in production)
+is_debug = os.getenv('FLASK_DEBUG', 'false').lower() in ('true', '1') or app.debug
+if not is_debug:
+    if app.secret_key == 'default_secret_key':
+        raise RuntimeError("CRITICAL: Flask SECRET_KEY cannot be default_secret_key in production!")
+    if ADMIN_PASSWORD == 'Abhi@':
+        raise RuntimeError("CRITICAL: ADMIN_PASSWORD cannot be Abhi@ in production!")
 
-    # Remove duplicate entries on startup
+# 3. Deduplicate messages table on startup
+try:
     with app.app_context():
         db_execute("""
             DELETE FROM messages 
@@ -249,6 +250,12 @@ if __name__ == '__main__':
                 GROUP BY name, email, message, strftime('%Y-%m-%d %H:%M', timestamp)
             )
         """, commit=True)
+except Exception as e:
+    print(f"[WARNING] Startup message deduplication skipped/failed: {e}")
 
+# ----------------------------
+# Main entry point (only for local direct execution)
+# ----------------------------
+if __name__ == '__main__':
     app.run(debug=True, port=5000)
 
