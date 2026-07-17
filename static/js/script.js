@@ -406,19 +406,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Hidden Admin Shortcut (Ctrl + A)
-document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && e.key.toLowerCase() === 'a') {
-        const adminLink = document.getElementById('admin-link');
-        if (adminLink) {
-            adminLink.style.display = 'inline';
-            adminLink.style.animation = 'blink 0.4s steps(2, start) 3';
-            setTimeout(() => {
-                adminLink.style.display = 'none';
-                window.location.href = '/admin';
-            }, 1200);
-        } else {
-            window.location.href = '/admin';
-        }
-    }
-});
+
