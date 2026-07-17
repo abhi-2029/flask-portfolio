@@ -1451,7 +1451,7 @@ nav ul li a:hover::after {
 /* Project Card Flip Effect */
 .project-card {
     perspective: 1000px;
-    height: 350px;
+    height: 500px;
     cursor: pointer;
 }
 .project-card-inner {
