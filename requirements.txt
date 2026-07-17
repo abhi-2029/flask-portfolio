@@ -17,8 +17,8 @@ Flask-Limiter==2.8.1
 python-dotenv==1.0.0
 
 # Deployment (optional)
-gunicorn==20.1.0
-setuptools
+gunicorn==22.0.0
+
 
 
 
