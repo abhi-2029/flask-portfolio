@@ -128,7 +128,6 @@ def index():
     return render_template('index.html')
 
 @app.route('/submit', methods=['POST'])
-@csrf.exempt
 def submit():
     """Handle contact form submission"""
     if request.method == 'POST':
@@ -193,7 +192,6 @@ def admin_home():
     return redirect(url_for('admin_login'))
 
 @app.route('/admin/login', methods=['GET', 'POST'])
-@csrf.exempt
 def admin_login():
     """Admin login"""
     error = None
