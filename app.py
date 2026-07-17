@@ -24,15 +24,26 @@ ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'Abhi@')
 # Database setup
 BASE_DIR = Path(__file__).parent
 DATABASE = BASE_DIR / 'messages.db'
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 # ----------------------------
 # Database connection handling
 # ----------------------------
 def get_db():
     if not hasattr(g, '_database'):
-        g._database = sqlite3.connect(DATABASE)
-        g._database.row_factory = sqlite3.Row
-        g._database.execute("PRAGMA foreign_keys = ON")
+        if DATABASE_URL:
+            import psycopg2
+            import psycopg2.extras
+            url = DATABASE_URL
+            if url.startswith("postgres://"):
+                url = url.replace("postgres://", "postgresql://", 1)
+            g._database = psycopg2.connect(url)
+            g._is_postgres = True
+        else:
+            g._database = sqlite3.connect(DATABASE)
+            g._database.row_factory = sqlite3.Row
+            g._database.execute("PRAGMA foreign_keys = ON")
+            g._is_postgres = False
     return g._database
 
 @app.teardown_appcontext
@@ -41,12 +52,48 @@ def close_db(exception):
     if db is not None:
         db.close()
 
+def db_execute(query, args=(), fetchall=False, fetchone=False, commit=False):
+    db = get_db()
+    is_postgres = getattr(g, '_is_postgres', False)
+    
+    if is_postgres:
+        # Translate SQLite syntax to PostgreSQL
+        query = query.replace('?', '%s')
+        query = query.replace("datetime('now', '-10 minutes')", "NOW() - INTERVAL '10 minutes'")
+        query = query.replace("strftime('%Y-%m-%d %H:%M', timestamp)", "to_char(timestamp, 'YYYY-MM-DD HH24:MI')")
+        query = query.replace("INTEGER PRIMARY KEY AUTOINCREMENT", "SERIAL PRIMARY KEY")
+        
+        import psycopg2.extras
+        cur = db.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cur.execute(query, args)
+        if commit:
+            db.commit()
+        
+        rv = None
+        if fetchall:
+            rv = cur.fetchall()
+        elif fetchone:
+            rv = cur.fetchone()
+        cur.close()
+        return rv
+    else:
+        cur = db.execute(query, args)
+        if commit:
+            db.commit()
+        
+        rv = None
+        if fetchall:
+            rv = cur.fetchall()
+        elif fetchone:
+            rv = cur.fetchone()
+        cur.close()
+        return rv
+
 def init_db():
     """Initialize messages table"""
     try:
         with app.app_context():
-            db = get_db()
-            db.execute("""
+            db_execute("""
                 CREATE TABLE IF NOT EXISTS messages (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT NOT NULL,
@@ -54,10 +101,9 @@ def init_db():
                     subject TEXT,
                     message TEXT NOT NULL,
                     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    UNIQUE(name, email, message, timestamp) ON CONFLICT IGNORE
+                    UNIQUE(name, email, message, timestamp)
                 )
-            """)
-            db.commit()
+            """, commit=True)
         print("[OK] Database initialized successfully")
     except Exception as e:
         print(f"[ERROR] Database initialization failed: {e}")
@@ -102,19 +148,19 @@ def submit():
             db = get_db()
 
             # Avoid duplicates in last 10 minutes
-            existing = db.execute('''
+            existing = db_execute('''
                 SELECT 1 FROM messages 
                 WHERE name=? AND email=? AND message=?
                 AND timestamp > datetime('now', '-10 minutes')
                 LIMIT 1
-            ''', (name, email, message)).fetchone()
+            ''', (name, email, message), fetchone=True)
 
             if not existing:
-                db.execute(
+                db_execute(
                     'INSERT INTO messages (name, email, subject, message) VALUES (?, ?, ?, ?)',
-                    (name, email, subject, message)
+                    (name, email, subject, message),
+                    commit=True
                 )
-                db.commit()
 
             return jsonify({
                 'success': True,
@@ -164,12 +210,11 @@ def admin_login():
 @admin_required
 def view_messages():
     """View all messages"""
-    db = get_db()
-    messages = db.execute('''
+    messages = db_execute('''
         SELECT name, email, subject, message, timestamp 
         FROM messages 
         ORDER BY timestamp DESC
-    ''').fetchall()
+    ''', fetchall=True)
 
     messages_list = [dict(msg) for msg in messages]
     return render_template('admin_messages.html', messages=messages_list)
@@ -198,16 +243,14 @@ if __name__ == '__main__':
 
     # Remove duplicate entries on startup
     with app.app_context():
-        db = get_db()
-        db.execute("""
+        db_execute("""
             DELETE FROM messages 
             WHERE id NOT IN (
                 SELECT MIN(id)
                 FROM messages
                 GROUP BY name, email, message, strftime('%Y-%m-%d %H:%M', timestamp)
             )
-        """)
-        db.commit()
+        """, commit=True)
 
     app.run(debug=True, port=5000)
 

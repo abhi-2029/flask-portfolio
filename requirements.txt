@@ -16,8 +16,9 @@ Flask-Limiter==2.8.1
 # Environment Management
 python-dotenv==1.0.0
 
-# Deployment (optional)
+# Deployment & Database (optional)
 gunicorn==22.0.0
+psycopg2-binary==2.9.9
 
 
 
