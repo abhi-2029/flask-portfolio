@@ -58,9 +58,9 @@ def init_db():
                 )
             """)
             db.commit()
-        print("✓ Database initialized successfully")
+        print("[OK] Database initialized successfully")
     except Exception as e:
-        print(f"✗ Database initialization failed: {e}")
+        print(f"[ERROR] Database initialization failed: {e}")
 
 # ----------------------------
 # Authentication decorator
