@@ -7,9 +7,6 @@ Jinja2==3.1.2
 Flask-WTF==1.1.1
 itsdangerous==2.1.2
 
-# Database
-sqlite3==3.42.0  # Built-in but specified for documentation
-
 # Frontend Assets (if needed)
 Flask-Assets==2.0
 
